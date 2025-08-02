@@ -1,0 +1,35 @@
+Project Name: Skavoo
+Author: Zascia Hugo
+Institution: Richfield Graduate Institute of Technology
+Date: 29 September 2025
+
+CUSTOM LICENSE AGREEMENT — FOR UNIVERSITY ASSIGNMENT USE ONLY
+
+Copyright (c) 2025 Zascia Hugo
+
+All rights reserved.
+
+This software and all associated content (including, but not limited to, source code, assets, branding, and project name) are submitted as part of a university assignment for academic evaluation purposes only.
+
+By accessing, reviewing, copying, distributing, executing, or storing this software, you agree to the following terms:
+
+1. RESTRICTIONS ON USE
+   - This project is intended solely for academic evaluation by the assigned examiners and moderators.
+   - This work may not be used, modified, sold, distributed, or reproduced in whole or in part for any purpose outside of academic grading without the explicit written consent of the author.
+   - The project name, brand, or likeness may not be reused, copied, rebranded, or referenced in future institutional materials, promotional content, teaching material, or student repositories.
+
+2. OWNERSHIP AND INTELLECTUAL PROPERTY
+   - The author retains all intellectual property rights to the codebase, design, features, documentation, and naming conventions associated with this project.
+   - No rights, titles, or licenses are granted to the university or its representatives beyond the limited evaluation purpose.
+
+3. CONFIDENTIALITY
+   - This project is submitted in confidence and must not be disclosed or stored in any public-facing repository, institutional archive, or shared with future students.
+
+4. BREACH
+   - Any breach of this license may result in legal action under applicable intellectual property and copyright laws.
+
+If you do not agree to these terms, you are not authorized to access or use this software for any purpose beyond direct academic assessment.
+
+Signed:
+Zascia Hugo
+2 August 2025
