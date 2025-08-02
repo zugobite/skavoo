@@ -47,21 +47,23 @@ class Router
      *
      * @return void
      */
-    public function dispatch(): void
+    public function dispatch()
     {
-        $requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+        $requestUri = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
         $requestMethod = $_SERVER['REQUEST_METHOD'];
 
-        $callback = $this->routes[$requestMethod][$requestUri] ?? null;
-
-        if (!$callback) {
-            http_response_code(404);
-            echo "404 Not Found";
-            return;
+        foreach ($this->routes[$requestMethod] ?? [] as $route => $callback) {
+            $pattern = preg_replace('/\{[a-zA-Z_]+\}/', '([a-zA-Z0-9_]+)', trim($route, '/'));
+            if (preg_match("#^{$pattern}$#", $requestUri, $matches)) {
+                array_shift($matches); // remove full match
+                return $this->callAction($callback, $matches);
+            }
         }
 
-        $this->callAction($callback);
+        http_response_code(404);
+        echo "404 Not Found";
     }
+
 
     /**
      * Resolve the callback into a controller and method, or run a closure.
@@ -69,17 +71,16 @@ class Router
      * @param callable|string $callback Either a closure or "Controller@method" string
      * @return void
      */
-    private function callAction($callback): void
+    private function callAction($callback, array $params = []): void
     {
         if (is_string($callback)) {
             list($controllerName, $method) = explode('@', $callback);
 
             require_once "../app/Controllers/{$controllerName}.php";
-
             $controller = new $controllerName();
-            call_user_func([$controller, $method]);
+            call_user_func_array([$controller, $method], $params);
         } else {
-            call_user_func($callback);
+            call_user_func_array($callback, $params);
         }
     }
 }

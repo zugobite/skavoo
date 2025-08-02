@@ -19,24 +19,28 @@
  */
 
 // Define path to the .env file
-$envFile = __DIR__ . '/../.env';
+$envFile = dirname(__DIR__, 2) . '/.env';
 
 /**
  * Load environment variables from the .env file if it exists.
  */
 if (file_exists($envFile)) {
-    // Read all lines, ignoring empty ones
+    // echo ".env file FOUND<br>";
     $lines = file($envFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-
-    // Loop through each line
     foreach ($lines as $line) {
-        // Skip comment lines
-        if (strpos(trim($line), '#') === 0) continue;
+        // echo "Processing: $line<br>";
+        $line = trim($line);
+        if ($line === '' || str_starts_with($line, '#')) continue;
 
-        // Split the line into key and value
-        list($key, $value) = explode('=', $line, 2);
+        if (strpos($line, '=') !== false) {
+            list($key, $value) = explode('=', $line, 2);
+            $key = trim($key);
+            $value = trim($value);
 
-        // Set as environment variable
-        putenv(trim($key) . '=' . trim($value));
+            putenv("$key=$value");
+            // echo "Set $key<br>";
+        }
     }
+} else {
+    // echo ".env file NOT FOUND<br>";
 }

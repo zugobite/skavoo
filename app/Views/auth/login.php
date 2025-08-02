@@ -1,16 +1,36 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <title>Login</title>
+    <meta charset="UTF-8">
+    <title>Login | Skavoo</title>
+    <link rel="stylesheet" href="/css/auth.css">
 </head>
 
-<body>
-    <form method='POST' action='/login'>
-        Email: <input type='email' name='email'>
-        Password: <input type='password' name='password'>
-        <button type='submit'>Login</button>
-    </form>
+<body class="xp-bg">
+    <div class="login-window">
+        <div class="window-header">
+            <span class="window-title">Login</span>
+            <span class="window-close">✖</span>
+        </div>
+        <div class="window-body">
+            <form method="POST" action="/login" autocomplete="off">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+
+                <button type="submit">Login</button>
+            </form>
+
+            <div class="links">
+                <p>Don't have an account? <a href="/register">Register</a></p>
+                <p><a href="/forgot-password">Forgot Password?</a></p>
+            </div>
+        </div>
+    </div>
+
 </body>
 
 </html>

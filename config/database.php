@@ -12,7 +12,10 @@
  * @see https://www.php.net/manual/en/book.pdo.php
  */
 
-require_once __DIR__ . '/../helpers/env.php'; // Load environment variables
+require_once __DIR__ . '/../app/Helpers/env.php';
+
+// Declare $pdo as global to make it accessible from other files
+global $pdo;
 
 // Retrieve credentials from .env using getenv()
 $host = getenv('DB_HOST');   // MySQL hostname
