@@ -1,4 +1,5 @@
 <?php
+
 /**
  * AuthController
  *
@@ -7,7 +8,8 @@
  *
  * @package Skavoo\Controllers
  */
-class AuthController {
+class AuthController
+{
 
     /**
      * Display the login page.
@@ -17,7 +19,8 @@ class AuthController {
      *
      * @return void
      */
-    public function loginPage() {
+    public function loginPage()
+    {
         include '../app/Views/auth/login.php';
     }
 
@@ -29,7 +32,8 @@ class AuthController {
      *
      * @return void
      */
-    public function login() {
+    public function login()
+    {
         // Login logic here (e.g., check email/password, set $_SESSION)
     }
 }

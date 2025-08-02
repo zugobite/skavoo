@@ -1,44 +1,44 @@
 <?php
+
 /**
- * Database Configuration
+ * Database Configuration using .env
  *
- * This file establishes a connection to the MySQL database using PDO.
- * It sets up the DSN (Data Source Name) and handles connection errors gracefully.
+ * Loads database credentials from the `.env` file using a helper script,
+ * and establishes a PDO connection to the MySQL database.
  *
- * @package Skavoo
+ * This approach helps keep sensitive credentials out of source control.
+ *
+ * @package Skavoo/Config
  * @see https://www.php.net/manual/en/book.pdo.php
  */
 
-// Database host (typically 'localhost' for local development)
-$host = 'localhost';
+require_once __DIR__ . '/../helpers/env.php'; // Load environment variables
 
-// Name of the database
-$db = 'social_db';
+// Retrieve credentials from .env using getenv()
+$host = getenv('DB_HOST');   // MySQL hostname
+$db   = getenv('DB_NAME');   // Database name
+$user = getenv('DB_USER');   // MySQL username
+$pass = getenv('DB_PASS');   // MySQL password
 
-// MySQL username
-$user = 'root';
-
-// MySQL password (leave empty for default MAMP/XAMPP installations)
-$pass = '';
-
-// Create DSN (Data Source Name) for PDO connection
+// Construct DSN (Data Source Name) for PDO
 $dsn = "mysql:host=$host;dbname=$db;charset=UTF8";
 
 try {
     /**
-     * Create a new PDO instance for database interaction.
+     * Create a new PDO connection instance.
      *
-     * @var PDO $pdo Database connection instance
+     * @var PDO $pdo The PDO instance for database interaction
      */
     $pdo = new PDO($dsn, $user, $pass);
 
-    // Optional: Set PDO error mode to exception
+    // Set PDO error mode to exception for proper error handling
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
 } catch (PDOException $e) {
     /**
-     * Handle connection error by outputting the error message.
+     * Output connection failure message.
      * In production, consider logging this instead of displaying it.
+     *
+     * @var string $e->getMessage PDO error message
      */
     echo 'Connection failed: ' . $e->getMessage();
 }

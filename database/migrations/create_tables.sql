@@ -1,6 +1,3 @@
--- Skavoo - Full Social Media Schema with created_at and updated_at
--- Author: Zascia Hugo
-
 -- Drop tables if they exist (in order of dependencies)
 DROP TABLE IF EXISTS shares;
 DROP TABLE IF EXISTS comments;
