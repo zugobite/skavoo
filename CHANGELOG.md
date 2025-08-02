@@ -10,9 +10,29 @@ See [semver.org](https://semver.org) for more details.
 
 ## Version Control Table
 
-| Version | Description                        | Author      | Date       |
-| ------- | ---------------------------------- | ----------- | ---------- |
-| 0.1.0   | Initial boilerplate and core setup | Zascia Hugo | 2025-08-02 |
+| Version | Description                               | Author      | Date       |
+| ------- | ----------------------------------------- | ----------- | ---------- |
+| 0.1.1   | Added .env support and improved DB config | Zascia Hugo | 2025-08-02 |
+| 0.1.0   | Initial boilerplate and core setup        | Zascia Hugo | 2025-08-02 |
+
+---
+
+## **[0.1.1] - 2025-08-02**
+
+### Added
+
+- `.env` file for secure environment variable configuration
+- `Helpers/env.php` to load variables from .env
+- Updated `config/database.php` to use `getenv()` for credentials
+- PHPDoc comments for both env loader and database connection
+
+### Changed
+
+- Moved hardcoded DB credentials out of `database.php` for better security
+
+### Notes
+
+- This refactor improves maintainability and security by isolating credentials
 
 ---
 

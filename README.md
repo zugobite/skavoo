@@ -60,6 +60,7 @@ skavoo/
 ├── app/
 │   ├── Controllers/                # Route logic (e.g., AuthController.php)
 │   ├── Core/                       # Custom Router, DB classes, etc.
+│   ├── Helpers/                    # Global utility functions (e.g., env loading, auth checks, formatters) 
 │   └── Views/
 │       └── auth/                   # Login and related UI templates
 ├── config/
@@ -72,9 +73,10 @@ skavoo/
 ├── database/
 │   └── migrations/
 │       └── create_tables.sql       # DB schema definition
+├── .env                            # Sets the environment variables
 ├── LICENSE.md                      # Custom academic license
 ├── CHANGELOG.md                    # Development changelog
-├── CONTRIBUTING.md                 # (Optional) Contribution guidelines
+├── CONTRIBUTING.md                 # Contribution guidelines
 └── README.md                       # You're reading it
 ```
 
