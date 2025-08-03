@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Feed | Skavoo</title>
     <link rel="stylesheet" href="/css/feed.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;700&display=swap" rel="stylesheet">
+
+    <script src="/js/search.js" defer></script>
 </head>
 
 <body>
@@ -28,7 +31,12 @@
                                 <?php endif; ?>
 
                                 <!-- Name and Add Friend -->
-                                <span><?= htmlspecialchars($person['full_name']) ?></span>
+                                <strong>
+                                    <a href="/user/profile/<?= htmlspecialchars($person['uuid'] ?? '') ?>">
+                                        <?= htmlspecialchars($person['full_name'] ?? 'Unknown User') ?>
+                                    </a>
+                                </strong>
+
                                 <form action="/friends/send" method="POST">
                                     <input type="hidden" name="receiver_id" value="<?= $person['id'] ?>">
                                     <button type="submit">Add Friend</button>
@@ -58,7 +66,11 @@
                                         <div class="post-avatar placeholder"></div>
                                     <?php endif; ?>
                                     <div class="post-user-text">
-                                        <strong><?= htmlspecialchars($post['full_name']) ?></strong>
+                                        <strong>
+                                            <a href="/user/profile/<?= htmlspecialchars($post['uuid'] ?? '') ?>">
+                                                <?= htmlspecialchars($post['full_name'] ?? 'Unknown User') ?>
+                                            </a>
+                                        </strong>
                                         <small class="post-date"><?= date('Y-m-d H:i', strtotime($post['created_at'])) ?></small>
                                     </div>
                                 </div>
@@ -94,14 +106,14 @@
         </main>
     </div>
 
-    <footer>
+    <!-- <footer>
         <p>&copy; <?= date('Y') ?> Skavoo. All rights reserved.</p>
         <nav class="footer-nav">
             <a href="/terms">Terms of Service</a> |
             <a href="/privacy">Privacy Policy</a> |
             <a href="/help">Help</a>
         </nav>
-    </footer>
+    </footer> -->
 </body>
 
 </html>

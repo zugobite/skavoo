@@ -39,7 +39,7 @@ class FeedController
         $current_user_id = $_SESSION['user_id'];
 
         $peopleStmt = $pdo->prepare("
-        SELECT id, full_name
+        SELECT id, uuid, profile_picture, full_name
         FROM users
         WHERE id != :me
         ORDER BY RAND()

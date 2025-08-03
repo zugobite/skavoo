@@ -106,3 +106,12 @@ $router->post('/user/post', 'UserController@createPost');
  * This route is used to display the user's feed with posts.
  */
 $router->get('/feed', 'FeedController@index');
+
+/**
+ * Define a GET route for searching users.
+ *
+ * When the user navigates to "/search", the request will be handled by
+ * the `lookup` method of the `SearchController` class.
+ * This route is used to search for users by name or email.
+ */
+$router->get('/search/lookup', 'SearchController@lookup');

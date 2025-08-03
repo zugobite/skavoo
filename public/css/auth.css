@@ -35,7 +35,10 @@ body {
 
 /* Background */
 body.xp-bg {
-  background: linear-gradient(to bottom, #0b5394 0%, #3d85c6 100%);
+  background: url("/images/background-image.png"), #4a88d0;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
   font-family: Tahoma, sans-serif;
   font-size: 13px;
   height: 100vh;

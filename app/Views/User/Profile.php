@@ -6,6 +6,9 @@
     <title><?= htmlspecialchars($user['full_name']) ?> – Profile | Skavoo</title>
     <meta name="description" content="View the profile of <?= htmlspecialchars($user['full_name']) ?> on Skavoo.">
     <link rel="stylesheet" href="/css/profile.css">
+    <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;700&display=swap" rel="stylesheet">
+
+    <script src="/js/search.js" defer></script>
 </head>
 
 <body>
@@ -178,14 +181,14 @@
         </div>
     </div>
 
-    <footer>
+    <!-- <footer>
         <p>&copy; <?= date('Y') ?> Skavoo. All rights reserved.</p>
         <nav class="footer-nav">
             <a href="/terms">Terms of Service</a> |
             <a href="/privacy">Privacy Policy</a> |
             <a href="/help">Help</a>
         </nav>
-    </footer>
+    </footer> -->
 </body>
 
 </html>

@@ -66,7 +66,8 @@ class AuthController
         $_SESSION['display_name'] = $user['display_name'];
 
         // Redirect to user profile via UUID
-        header("Location: /user/profile/{$user['uuid']}");
+        // header("Location: /user/profile/{$user['uuid']}");
+        header("Location: /feed");
         exit;
     }
 
@@ -139,7 +140,8 @@ class AuthController
         $stmt->execute([$uuid, $fullName, $displayName, $email, $hashedPassword, $filename]);
 
 
-        echo "Registration successful. <a href='/login'>Login here</a>";
+        header('Location: /login');
+        exit;
     }
 
     /**
@@ -200,7 +202,8 @@ class AuthController
         $stmt = $pdo->prepare("UPDATE users SET password = ? WHERE email = ?");
         $stmt->execute([$hashedPassword, $email]);
 
-        echo 'Password reset successful. <a href="/login">Login here</a>';
+        header('Location: /login');
+        exit;
     }
 
     /**
