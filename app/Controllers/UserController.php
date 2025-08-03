@@ -44,27 +44,6 @@ class UserController
     }
 
     /**
-     * List all users.
-     *
-     * This method includes the user list view, which shows
-     * a list of all registered users.
-     *
-     * @return void
-     */
-    public function list()
-    {
-        require_once __DIR__ . '/../../config/database.php';
-        session_start();
-
-        global $pdo;
-
-        $stmt = $pdo->query("SELECT full_name, display_name, uuid, profile_picture FROM users ORDER BY created_at DESC");
-        $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        include '../app/Views/User/List.php';
-    }
-
-    /**
      * Handle post creation for the authenticated user.
      *
      * Accepts content and optional media file, saves post to DB.

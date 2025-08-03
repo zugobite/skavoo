@@ -90,15 +90,6 @@ $router->get('/logout', 'AuthController@logout');
 $router->get('/user/profile/{uuid}', 'UserController@profile');
 
 /**
- * Define a GET route for viewing all users.
- *
- * When the user navigates to "/users", the request will be handled by
- * the `list` method of the `UserController` class.
- * This route is used to display a list of all registered users.
- */
-$router->get('/user/all', 'UserController@list');
-
-/**
  * Define a POST route for creating a new post.
  *
  * When the user submits the new post form, the request will be handled by
@@ -106,3 +97,12 @@ $router->get('/user/all', 'UserController@list');
  * This route is used to process the creation of new posts.
  */
 $router->post('/user/post', 'UserController@createPost');
+
+/**
+ * Define a GET route for the user feed.
+ *
+ * When the user navigates to "/feed", the request will be handled by
+ * the `index` method of the `FeedController` class.
+ * This route is used to display the user's feed with posts.
+ */
+$router->get('/feed', 'FeedController@index');
