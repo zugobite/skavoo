@@ -169,25 +169,16 @@ class AuthController
     {
         session_start();
 
-        // Get submitted email and new password
         $email = trim($_POST['email'] ?? '');
-        $newPassword = $_POST['password'] ?? '';
-        $confirmPassword = $_POST['confirm'] ?? '';
 
-        // Basic input validation
-        if (empty($email) || empty($newPassword) || empty($confirmPassword)) {
-            echo 'Please fill in all fields.';
-            return;
-        }
-
-        if ($newPassword !== $confirmPassword) {
-            echo 'Passwords do not match.';
+        if (empty($email)) {
+            echo 'Please provide an email address.';
             return;
         }
 
         require '../config/database.php';
 
-        // Check if email exists
+        // Check if the email exists
         $stmt = $pdo->prepare("SELECT id FROM users WHERE email = ?");
         $stmt->execute([$email]);
         if (!$stmt->fetch()) {
@@ -195,16 +186,29 @@ class AuthController
             return;
         }
 
-        // Hash the new password
-        $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+        // Generate token and expiry
+        $token = bin2hex(random_bytes(32));
+        $expiresAt = date('Y-m-d H:i:s', strtotime('+1 hour'));
 
-        // Update the user's password in the database
-        $stmt = $pdo->prepare("UPDATE users SET password = ? WHERE email = ?");
-        $stmt->execute([$hashedPassword, $email]);
+        // Insert into password_resets
+        $stmt = $pdo->prepare("INSERT INTO password_resets (email, token, expires_at) VALUES (?, ?, ?)");
+        $stmt->execute([$email, $token, $expiresAt]);
 
-        header('Location: /login');
+        // Build reset link
+        $resetLink = "http://localhost:8000/reset-password?token=$token";
+
+        // Send email
+        $subject = "Reset your password";
+        $message = "Click the link below to reset your password:\n$resetLink";
+        $headers = "From: no-reply@skavoo.co.za";
+
+        mail($email, $subject, $message, $headers);
+
+        // Redirect or show message
+        header("Location: /login");
         exit;
     }
+
 
     /**
      * Logout the user.

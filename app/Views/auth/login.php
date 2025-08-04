@@ -36,14 +36,14 @@
         </div>
     </div>
 
-    <!-- <footer>
+    <footer>
         <p>&copy; <?= date('Y') ?> Skavoo. All rights reserved.</p>
         <nav class="footer-nav">
             <a href="/terms">Terms of Service</a> |
             <a href="/privacy">Privacy Policy</a> |
             <a href="/help">Help</a>
         </nav>
-    </footer> -->
+    </footer>
 </body>
 
 </html>

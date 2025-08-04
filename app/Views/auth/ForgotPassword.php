@@ -23,12 +23,6 @@
                     <label for="email">Email Address</label>
                     <input type="email" id="email" name="email" required>
 
-                    <label for="password">New Password</label>
-                    <input type="password" id="password" name="password" required>
-
-                    <label for="confirm">Confirm Password</label>
-                    <input type="password" id="confirm" name="confirm" required>
-
                     <button type="submit">Reset Password</button>
                 </form>
 
@@ -39,14 +33,14 @@
         </div>
     </div>
 
-    <!-- <footer>
+    <footer>
         <p>&copy; <?= date('Y') ?> Skavoo. All rights reserved.</p>
         <nav class="footer-nav">
             <a href="/terms">Terms of Service</a> |
             <a href="/privacy">Privacy Policy</a> |
             <a href="/help">Help</a>
         </nav>
-    </footer> -->
+    </footer>
 </body>
 
 </html>

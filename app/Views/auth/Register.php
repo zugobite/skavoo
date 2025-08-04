@@ -48,21 +48,21 @@
         </div>
     </div>
 
-    <!-- <footer>
+    <footer>
         <p>&copy; <?= date('Y') ?> Skavoo. All rights reserved.</p>
         <nav class="footer-nav">
             <a href="/terms">Terms of Service</a> |
             <a href="/privacy">Privacy Policy</a> |
             <a href="/help">Help</a>
         </nav>
-    </footer> -->
+    </footer>
 
-    <!-- <script>
+    <script>
         function updateFileName(input) {
             const fileName = input.files.length > 0 ? input.files[0].name : "No file chosen";
             document.getElementById("file-name").textContent = fileName;
         }
-    </script> -->
+    </script>
 </body>
 
 </html>
