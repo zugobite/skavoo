@@ -4,13 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Forgot Password | Skavoo</title>
-    <link rel="stylesheet" href="/css/auth.css">
+    <link rel="stylesheet" href="/css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;700&display=swap" rel="stylesheet">
 </head>
 
 <body class="xp-bg">
     <div>
-        <div class="logo">SKAVOO</div>
+        <div class="logo" style="margin-left: 110px; margin-bottom: 25px;">SKAVOO</div>
 
         <div class="login-window">
             <div class="window-header">
