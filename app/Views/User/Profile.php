@@ -42,7 +42,7 @@
                     <?php if (!$friendship): ?>
                         <form action="/friends/send" method="POST">
                             <input type="hidden" name="receiver_id" value="<?= $user['id'] ?>">
-                            <button type="submit">Send Friend Request</button>
+                            <button type="submit">Add Friend</button>
                         </form>
                     <?php elseif ($friendship['status'] === 'pending'): ?>
                         <p>Friend request pending</p>
@@ -53,7 +53,7 @@
 
                 <form action="/messages/compose" method="GET">
                     <input type="hidden" name="to" value="<?= $user['uuid'] ?>">
-                    <button type="submit">Message</button>
+                    <button type="submit" style="width: 100%;">Message</button>
                 </form>
             </div>
         <?php endif; ?>
@@ -94,8 +94,8 @@
         </aside>
 
         <div class="content-wrapper">
-            <div class="content">
-                <?php if ($is_own_profile): ?>
+            <?php if ($is_own_profile): ?>
+                <div class="content">
                     <section id="create-post">
                         <h2>Create Post</h2>
                         <form method="POST" action="/user/post" enctype="multipart/form-data">
@@ -108,8 +108,8 @@
                             <button type="submit" class="post-btn">Post</button>
                         </form>
                     </section>
-                <?php endif; ?>
-            </div>
+                </div>
+            <?php endif; ?>
 
             <main class="content">
                 <?php
