@@ -10,12 +10,11 @@
  * PHP version 8+
  *
  * @package Skavoo
- * @author  
+ * @author  Zascia Hugo
  * @license MIT
  */
 
-// Load the core Router class
-require_once '../app/Core/Router.php';
+require_once __DIR__ . '/../app/Core/Router.php';
 
 // Instantiate the Router
 $router = new Router();
