@@ -72,6 +72,33 @@ $router->get('/forgot-password', 'AuthController@forgotPasswordPage');
 $router->post('/forgot-password', 'AuthController@forgotPassword');
 
 /**
+ * Define a POST route for sending the password reset link.
+ *
+ * When the user submits the form to send a password reset link,
+ * the request will be handled by the `sendResetLink` method of the `AuthController` class.
+ * This route is used to send an email with a link to reset the user's password.
+ */
+$router->post('/forgot-password', 'AuthController@sendResetLink');
+
+/**
+ * Define a GET route for the reset password page.
+ *
+ * When the user navigates to "/reset-password", the request will be handled by
+ * the `resetPasswordPage` method of the `AuthController` class.
+ * This route is used to display the form for resetting the user's password.
+ */
+$router->get('/reset-password', 'AuthController@resetPasswordPage');
+
+/**
+ * Define a POST route for the reset password action.
+ *
+ * When the user submits the reset password form, the request will be handled by
+ * the `resetPassword` method of the `AuthController` class.
+ * This route is used to process the new password submission.
+ */
+$router->post('/reset-password', 'AuthController@resetPassword');
+
+/**
  * Define a GET route for the logout action.
  *
  * When the user navigates to "/logout", the request will be handled by
