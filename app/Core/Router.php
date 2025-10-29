@@ -74,13 +74,31 @@ class Router
     private function callAction($callback, array $params = []): void
     {
         if (is_string($callback)) {
-            list($controllerName, $method) = explode('@', $callback);
+            [$controllerName, $method] = explode('@', $callback);
 
+            // Load the controller file
             require_once "../app/Controllers/{$controllerName}.php";
-            $controller = new $controllerName();
+
+            // Prefer namespaced controller (App\Controllers\*)
+            $fqcn = "App\\Controllers\\{$controllerName}";
+            if (class_exists($fqcn)) {
+                $controller = new $fqcn();
+            } elseif (class_exists($controllerName)) {
+                // Fallback: non-namespaced class (e.g., legacy controllers)
+                $controller = new $controllerName();
+            } else {
+                throw new \RuntimeException("Controller class not found: {$controllerName}");
+            }
+
+            if (!method_exists($controller, $method)) {
+                throw new \RuntimeException("Controller method not found: {$controllerName}@{$method}");
+            }
+
             call_user_func_array([$controller, $method], $params);
-        } else {
-            call_user_func_array($callback, $params);
+            return;
         }
+
+        // Closure/array callbacks
+        call_user_func_array($callback, $params);
     }
 }

@@ -11,6 +11,9 @@
 
 require_once __DIR__ . '/../../config/database.php';
 require_once __DIR__ . '/../Middleware/AuthMiddleware.php';
+require_once __DIR__ . '/../Helpers/DB.php';
+
+USE App\Helpers\DB;
 
 class UserController
 {
@@ -104,7 +107,7 @@ class UserController
     {
         AuthMiddleware::handle();
 
-        $pdo   = app_db();
+        $pdo   = \App\Helpers\DB::pdo();
         $meUuid = isset($params['uuid']) ? $params['uuid'] : null;
 
         $meId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;

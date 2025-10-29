@@ -9,7 +9,21 @@
 </head>
 
 <body class="xp-bg">
-    <?php if (session_status() === PHP_SESSION_NONE) session_start(); ?>
+    <?php
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+    if (!function_exists('csrf_field')) {
+        function csrf_field() {
+            // ensure a CSRF token exists in session
+            if (empty($_SESSION['csrf'])) {
+                // generate a random token
+                $_SESSION['csrf'] = bin2hex(random_bytes(32));
+            }
+            return '<input type="hidden" name="csrf" value="' . htmlspecialchars($_SESSION['csrf'], ENT_QUOTES) . '">';
+        }
+    }
+    ?>
     <div>
         <div class="logo" style="margin-left: 110px; margin-bottom: 25px;">SKAVOO</div>
 
@@ -38,7 +52,7 @@
                     <?php if (!function_exists('csrf_field')): ?>
                         <input type="hidden" name="csrf" value="<?= htmlspecialchars($_SESSION['csrf'] ?? '', ENT_QUOTES) ?>">
                     <?php else: ?>
-                        <?= csrf_field() ?>
+                        <?= csrf_field() ?> 
                     <?php endif; ?>
 
                     <label for="email">Email Address</label>

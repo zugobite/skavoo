@@ -41,7 +41,7 @@
 
                     <label for="password">New password</label>
                     <input type="password" id="password" name="password" required minlength="8">
-
+ 
                     <label for="password_confirm">Confirm new password</label>
                     <input type="password" id="password_confirm" name="password_confirm" required minlength="8">
 
