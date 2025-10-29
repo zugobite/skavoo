@@ -1,52 +1,82 @@
 <?php
 
-/**
- * Database Helper Functions
- *
- * This file provides a utility function for managing and retrieving
- * a persistent PDO database connection. It ensures that the same
- * PDO instance is reused across the application for efficiency.
- */
+namespace App\Helpers;
+
+use PDO;
+use RuntimeException;
 
 /**
- * Returns a shared PDO database connection instance.
+ * Database Helper Class
  *
- * This function initializes and caches a PDO connection using configuration
- * details provided in `config/database.php` and environment variables loaded
- * from `env.php`. The PDO instance is configured to:
- * - Throw exceptions on errors (`PDO::ERRMODE_EXCEPTION`)
- * - Fetch associative arrays by default (`PDO::FETCH_ASSOC`)
+ * Provides a shared PDO database connection accessible via DB::pdo().
+ * Internally uses the same config and environment logic as before.
  *
- * @throws RuntimeException If the PDO instance is not initialized properly.
- *
- * @return PDO The shared PDO database connection.
+ * Also includes the legacy global function db() for backward compatibility.
  */
-function db(): PDO
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+class DB
 {
-    static $pdoRef = null;
+    /**
+     * Cached PDO instance.
+     *
+     * @var PDO|null
+     */
+    private static ?PDO $pdoRef = null;
 
-    // Return the existing connection if already initialized
-    if ($pdoRef instanceof PDO) {
-        return $pdoRef;
+    /**
+     * Get (and cache) a shared PDO database connection instance.
+     *
+     * @throws RuntimeException If the PDO instance is not initialized properly.
+     * @return PDO
+     */
+    public static function pdo(): PDO
+    {
+        // Return cached connection if already initialized
+        if (self::$pdoRef instanceof PDO) {
+            return self::$pdoRef;
+        }
+
+        // Load environment and configuration files
+        require_once __DIR__ . '/env.php';
+        require_once dirname(__DIR__, 2) . '/config/database.php'; // defines global $pdo
+
+        // Access the globally defined PDO instance
+        global $pdo;
+
+        // Verify initialization
+        if (!($pdo instanceof PDO)) {
+            throw new RuntimeException('PDO not initialized by config/database.php');
+        }
+
+        // Configure PDO options
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+
+        // Cache and return
+        self::$pdoRef = $pdo;
+        return self::$pdoRef;
     }
+}
 
-    // Load environment and configuration files
-    require_once __DIR__ . '/env.php';
-    require_once dirname(__DIR__, 2) . '/config/database.php'; // sets global $pdo
+/**
+ * --------------------------------------------------------------------------
+ * Backwards Compatibility (optional)
+ * --------------------------------------------------------------------------
+ * Retains the original global db() function for any existing procedural code.
+ */
 
-    // Access the globally defined PDO instance
-    global $pdo;
-
-    // Ensure the PDO instance was correctly initialized
-    if (!($pdo instanceof PDO)) {
-        throw new RuntimeException('PDO not initialized by config/database.php');
+if (!function_exists('db')) {
+    /**
+     * Returns the shared PDO database connection (alias for DB::pdo()).
+     *
+     * @return PDO
+     */
+    function db(): PDO
+    {
+        return DB::pdo();
     }
-
-    // Configure PDO error handling and fetch mode
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-
-    // Cache and return the PDO reference
-    $pdoRef = $pdo;
-    return $pdoRef;
 }

@@ -193,3 +193,53 @@ $router->get('/feed', 'FeedController@index');
  * @description Enables user search functionality by name or email.
  */
 $router->get('/search/lookup', 'SearchController@lookup');
+
+/**
+ * ---------------------------------------------------------------
+ * Profile edit & update
+ * ---------------------------------------------------------------
+ */
+
+/**
+ * Profile edit & update
+ *
+ * @method GET
+ * @route  /user/profile/{uuid}/edit
+ * @controller UserController@editProfile
+ * @description Shows the profile edit form for the authenticated owner.
+ */
+$router->get('/user/profile/{uuid}/edit', 'UserController@editProfile');
+
+/**
+ * @method POST
+ * @route  /user/profile/{uuid}
+ * @controller UserController@updateProfile
+ * @description Updates display name and optional profile picture for the authenticated owner.
+ */
+$router->post('/user/profile/{uuid}', 'UserController@updateProfile');
+
+/**
+ * Private messages
+ *
+ * @method GET
+ * @route  /messages
+ * @controller MessagesController@index
+ * @description Shows recent conversations (inbox).
+ */
+$router->get('/messages', 'MessagesController@index');
+
+/**
+ * @method GET
+ * @route  /messages/{user_uuid}
+ * @controller MessagesController@thread
+ * @description Opens/creates a conversation thread with a specific user.
+ */
+$router->get('/messages/{user_uuid}', 'MessagesController@thread');
+
+/**
+ * @method POST
+ * @route  /messages/{user_uuid}
+ * @controller MessagesController@send
+ * @description Sends a private message to the user.
+ */
+$router->post('/messages/{user_uuid}', 'MessagesController@send');
