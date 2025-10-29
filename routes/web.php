@@ -3,142 +3,193 @@
 /**
  * Web Routes
  *
- * This file defines all the web-accessible routes for the application.
- * Each route maps a URI to a specific controller and method.
+ * This file defines all publicly accessible HTTP routes for the Skavoo application.
+ * Each route maps a specific HTTP method and URI pattern to a controller action,
+ * ensuring that requests are routed to the appropriate business logic.
  *
  * @package Skavoo
  */
 
 /**
- * Define a GET route for the home page.
+ * ---------------------------------------------------------------
+ * Home Routes
+ * ---------------------------------------------------------------
+ */
+
+/**
+ * Display the public home page.
  *
- * When the user navigates to "/", the request will be handled by
- * the `index` method of the `HomeController` class.
- * This route is used to display the home page.
+ * @method GET
+ * @route /
+ * @controller HomeController@index
+ * @description Shows the application's main landing page.
  */
 $router->get('/', 'HomeController@index');
 
 /**
- * Define a GET route for the login page.
+ * ---------------------------------------------------------------
+ * Authentication Routes
+ * ---------------------------------------------------------------
+ */
+
+/**
+ * Display the login form for users.
  *
- * When the user navigates to "/login", the request will be handled by
- * the `loginPage` method of the `AuthController` class.
- * This route is used to display the login form for users.
+ * @method GET
+ * @route /login
+ * @controller AuthController@loginPage
+ * @description Renders the login page for user authentication.
  */
 $router->get('/login', 'AuthController@loginPage');
 
 /**
- * Define a POST route for the login action.
+ * Handle login form submission.
  *
- * When the user submits the login form, the request will be handled by
- * the `login` method of the `AuthController` class.
- * This route is used to process the login credentials.
+ * @method POST
+ * @route /login
+ * @controller AuthController@login
+ * @description Authenticates the user and starts a new session.
  */
 $router->post('/login', 'AuthController@login');
 
 /**
- * Define a GET route for the register page.
- * 
- * When the user navigates to "/register", the request will be handled by
- * the `registerPage` method of the `AuthController` class.
- * This route is used to display the registration form for new users.
+ * Display the user registration form.
+ *
+ * @method GET
+ * @route /register
+ * @controller AuthController@registerPage
+ * @description Renders the registration page for new users.
  */
 $router->get('/register', 'AuthController@registerPage');
+
 /**
- * Define a POST route for the registration action.
+ * Process the user registration form.
  *
- * When the user submits the registration form, the request will be handled by
- * the `register` method of the `AuthController` class.
- * This route is used to process new user registrations.
+ * @method POST
+ * @route /register
+ * @controller AuthController@register
+ * @description Validates and stores a new user account.
  */
 $router->post('/register', 'AuthController@register');
 
 /**
- * Define a GET route for the password reset page.
+ * ---------------------------------------------------------------
+ * Password Reset Routes
+ * ---------------------------------------------------------------
+ */
+
+/**
+ * Display the "Forgot Password" page.
  *
- * When the user navigates to "/forgot-password", the request will be handled by
- * the `forgotPasswordPage` method of the `AuthController` class.
- * This route is used to display the password reset form for users.
+ * @method GET
+ * @route /forgot-password
+ * @controller AuthController@forgotPasswordPage
+ * @description Allows users to request a password reset link via email.
  */
 $router->get('/forgot-password', 'AuthController@forgotPasswordPage');
 
 /**
- * Define a POST route for the password reset action.
+ * Handle password reset link requests.
  *
- * When the user submits the password reset form, the request will be handled by
- * the `forgotPassword` method of the `AuthController` class.
- * This route is used to process password reset requests.
- */
-$router->post('/forgot-password', 'AuthController@forgotPassword');
-
-/**
- * Define a POST route for sending the password reset link.
- *
- * When the user submits the form to send a password reset link,
- * the request will be handled by the `sendResetLink` method of the `AuthController` class.
- * This route is used to send an email with a link to reset the user's password.
+ * @method POST
+ * @route /forgot-password
+ * @controller AuthController@sendResetLink
+ * @description Sends an email containing a secure password reset link.
  */
 $router->post('/forgot-password', 'AuthController@sendResetLink');
 
 /**
- * Define a GET route for the reset password page.
+ * Display the password reset form.
  *
- * When the user navigates to "/reset-password", the request will be handled by
- * the `resetPasswordPage` method of the `AuthController` class.
- * This route is used to display the form for resetting the user's password.
+ * @method GET
+ * @route /reset-password
+ * @controller AuthController@resetPasswordPage
+ * @description Shows the reset password form linked from the user's email.
  */
 $router->get('/reset-password', 'AuthController@resetPasswordPage');
 
 /**
- * Define a POST route for the reset password action.
+ * Handle password reset submissions.
  *
- * When the user submits the reset password form, the request will be handled by
- * the `resetPassword` method of the `AuthController` class.
- * This route is used to process the new password submission.
+ * @method POST
+ * @route /reset-password
+ * @controller AuthController@handleResetPassword
+ * @description Validates the reset token and updates the user's password.
  */
-$router->post('/reset-password', 'AuthController@resetPassword');
+$router->post('/reset-password', 'AuthController@handleResetPassword');
 
 /**
- * Define a GET route for the logout action.
+ * ---------------------------------------------------------------
+ * Logout Route
+ * ---------------------------------------------------------------
+ */
+
+/**
+ * Log the user out of the application.
  *
- * When the user navigates to "/logout", the request will be handled by
- * the `logout` method of the `AuthController` class.
- * This route is used to log out the user from the application.
+ * @method GET
+ * @route /logout
+ * @controller AuthController@logout
+ * @description Ends the user's session and redirects to the home page.
  */
 $router->get('/logout', 'AuthController@logout');
 
 /**
- * Define a GET route for the user profile page.
+ * ---------------------------------------------------------------
+ * User Routes
+ * ---------------------------------------------------------------
+ */
+
+/**
+ * Display a user's public profile.
  *
- * When the user navigates to "/user/profile", the request will be handled by
- * the `profile` method of the `UserController` class.
- * This route is used to display the user's profile information.
+ * @method GET
+ * @route /user/profile/{uuid}
+ * @controller UserController@profile
+ * @description Shows the profile page for a user identified by their UUID.
+ *
+ * @param string $uuid The unique identifier of the user whose profile to display.
  */
 $router->get('/user/profile/{uuid}', 'UserController@profile');
 
 /**
- * Define a POST route for creating a new post.
+ * Create a new post for the authenticated user.
  *
- * When the user submits the new post form, the request will be handled by
- * the `createPost` method of the `UserController` class.
- * This route is used to process the creation of new posts.
+ * @method POST
+ * @route /user/post
+ * @controller UserController@createPost
+ * @description Handles new post submissions from the user's profile or feed.
  */
 $router->post('/user/post', 'UserController@createPost');
 
 /**
- * Define a GET route for the user feed.
+ * ---------------------------------------------------------------
+ * Feed Routes
+ * ---------------------------------------------------------------
+ */
+
+/**
+ * Display the user's personalized feed.
  *
- * When the user navigates to "/feed", the request will be handled by
- * the `index` method of the `FeedController` class.
- * This route is used to display the user's feed with posts.
+ * @method GET
+ * @route /feed
+ * @controller FeedController@index
+ * @description Shows the aggregated feed of posts for the logged-in user.
  */
 $router->get('/feed', 'FeedController@index');
 
 /**
- * Define a GET route for searching users.
+ * ---------------------------------------------------------------
+ * Search Routes
+ * ---------------------------------------------------------------
+ */
+
+/**
+ * Search for users by name or email address.
  *
- * When the user navigates to "/search", the request will be handled by
- * the `lookup` method of the `SearchController` class.
- * This route is used to search for users by name or email.
+ * @method GET
+ * @route /search/lookup
+ * @controller SearchController@lookup
+ * @description Enables user search functionality by name or email.
  */
 $router->get('/search/lookup', 'SearchController@lookup');

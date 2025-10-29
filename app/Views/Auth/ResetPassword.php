@@ -1,21 +1,21 @@
+<?php if (session_status() === PHP_SESSION_NONE) session_start(); ?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
-    <title>Forgot Password | Skavoo</title>
+    <title>Reset Password | Skavoo</title>
     <link rel="stylesheet" href="/css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;700&display=swap" rel="stylesheet">
 </head>
 
 <body class="xp-bg">
-    <?php if (session_status() === PHP_SESSION_NONE) session_start(); ?>
     <div>
         <div class="logo" style="margin-left: 110px; margin-bottom: 25px;">SKAVOO</div>
 
         <div class="login-window">
             <div class="window-header">
-                <span class="window-title">Forgot Password</span>
+                <span class="window-title">Reset Password</span>
                 <span class="window-close">✖</span>
             </div>
 
@@ -34,31 +34,22 @@
                     <?php unset($_SESSION['flash_error']); ?>
                 <?php endif; ?>
 
-                <form method="POST" action="/forgot-password" autocomplete="off">
-                    <?php if (!function_exists('csrf_field')): ?>
-                        <input type="hidden" name="csrf" value="<?= htmlspecialchars($_SESSION['csrf'] ?? '', ENT_QUOTES) ?>">
-                    <?php else: ?>
-                        <?= csrf_field() ?>
-                    <?php endif; ?>
+                <form method="POST" action="/reset-password" autocomplete="off">
+                    <?= function_exists('csrf_field') ? csrf_field() : '<input type="hidden" name="csrf" value="' . htmlspecialchars($_SESSION['csrf'] ?? '', ENT_QUOTES) . '">' ?>
 
-                    <label for="email">Email Address</label>
-                    <input type="email" id="email" name="email" required>
+                    <input type="hidden" name="token" value="<?= htmlspecialchars($_GET['token'] ?? $token ?? '', ENT_QUOTES) ?>">
 
-                    <button type="submit">Reset Password</button>
+                    <label for="password">New password</label>
+                    <input type="password" id="password" name="password" required minlength="8">
+
+                    <label for="password_confirm">Confirm new password</label>
+                    <input type="password" id="password_confirm" name="password_confirm" required minlength="8">
+
+                    <button type="submit">Update Password</button>
                 </form>
 
-                <?php if (!empty($_SESSION['dev_reset_url']) && (strtolower(getenv('APP_ENV') ?: 'production') !== 'production')): ?>
-                    <div class="alert warning" style="margin-top:12px;">
-                        <strong>DEV ONLY:</strong>
-                        <a href="<?= htmlspecialchars($_SESSION['dev_reset_url']) ?>" target="_blank" rel="noopener">
-                            <?= htmlspecialchars($_SESSION['dev_reset_url']) ?>
-                        </a>
-                    </div>
-                    <?php unset($_SESSION['dev_reset_url']); ?>
-                <?php endif; ?>
-
                 <div class="links">
-                    <p>Remembered your password? <a href="/login">Login</a></p>
+                    <p><a href="/login">Back to login</a></p>
                 </div>
             </div>
         </div>
