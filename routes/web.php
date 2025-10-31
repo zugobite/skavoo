@@ -7,6 +7,11 @@
  * Each route maps a specific HTTP method and URI pattern to a controller action,
  * ensuring that requests are routed to the appropriate business logic.
  *
+ * Conventions:
+ * - Use RESTful verbs where possible.
+ * - POST routes that mutate state should be CSRF-protected.
+ * - UUIDs are used for user-facing identifiers.
+ *
  * @package Skavoo
  */
 
@@ -25,6 +30,7 @@
  * @description Shows the application's main landing page.
  */
 $router->get('/', 'HomeController@index');
+
 
 /**
  * ---------------------------------------------------------------
@@ -72,6 +78,7 @@ $router->get('/register', 'AuthController@registerPage');
  */
 $router->post('/register', 'AuthController@register');
 
+
 /**
  * ---------------------------------------------------------------
  * Password Reset Routes
@@ -118,6 +125,7 @@ $router->get('/reset-password', 'AuthController@resetPasswordPage');
  */
 $router->post('/reset-password', 'AuthController@handleResetPassword');
 
+
 /**
  * ---------------------------------------------------------------
  * Logout Route
@@ -133,6 +141,7 @@ $router->post('/reset-password', 'AuthController@handleResetPassword');
  * @description Ends the user's session and redirects to the home page.
  */
 $router->get('/logout', 'AuthController@logout');
+
 
 /**
  * ---------------------------------------------------------------
@@ -159,8 +168,13 @@ $router->get('/user/profile/{uuid}', 'UserController@profile');
  * @route /user/post
  * @controller UserController@createPost
  * @description Handles new post submissions from the user's profile or feed.
+ *
+ * Security:
+ * - Requires authentication.
+ * - Must be CSRF-protected.
  */
 $router->post('/user/post', 'UserController@createPost');
+
 
 /**
  * ---------------------------------------------------------------
@@ -175,8 +189,12 @@ $router->post('/user/post', 'UserController@createPost');
  * @route /feed
  * @controller FeedController@index
  * @description Shows the aggregated feed of posts for the logged-in user.
+ *
+ * Security:
+ * - Requires authentication.
  */
 $router->get('/feed', 'FeedController@index');
+
 
 /**
  * ---------------------------------------------------------------
@@ -191,9 +209,13 @@ $router->get('/feed', 'FeedController@index');
  * @route /search/lookup
  * @controller SearchController@lookup
  * @description Enables user search functionality by name or email.
+ *
+ * Query Params:
+ * - q: string (search term)
  */
 $router->get('/search/lookup', 'SearchController@lookup');
 
+
 /**
  * ---------------------------------------------------------------
  * Profile edit & update
@@ -201,45 +223,84 @@ $router->get('/search/lookup', 'SearchController@lookup');
  */
 
 /**
- * Profile edit & update
+ * Show the profile edit form for the authenticated owner.
  *
  * @method GET
- * @route  /user/profile/{uuid}/edit
- * @controller UserController@editProfile
- * @description Shows the profile edit form for the authenticated owner.
+ * @route /user/profile/{uuid}/edit
+ * @controller UserController@editProfilePage
+ * @description Displays the edit profile page (owner-only).
+ *
+ * @param string $uuid The UUID of the profile being edited.
+ *
+ * Security:
+ * - Requires authentication.
+ * - Access limited to the profile owner.
  */
-$router->get('/user/profile/{uuid}/edit', 'UserController@editProfile');
+$router->get('/user/profile/{uuid}/edit', 'UserController@editProfilePage');
 
 /**
+ * Update profile (display name and optional profile picture).
+ *
  * @method POST
- * @route  /user/profile/{uuid}
+ * @route /user/profile/{uuid}/edit
  * @controller UserController@updateProfile
  * @description Updates display name and optional profile picture for the authenticated owner.
+ *
+ * @param string $uuid The UUID of the profile being updated.
+ *
+ * Security:
+ * - Requires authentication.
+ * - Must be CSRF-protected.
+ * - Access limited to the profile owner.
  */
-$router->post('/user/profile/{uuid}', 'UserController@updateProfile');
+$router->post('/user/profile/{uuid}/edit', 'UserController@updateProfile');
 
 /**
+ * ---------------------------------------------------------------
  * Private messages
+ * ---------------------------------------------------------------
+ */
+
+/**
+ * Show recent conversations (inbox).
  *
  * @method GET
- * @route  /messages
+ * @route /messages
  * @controller MessagesController@index
- * @description Shows recent conversations (inbox).
+ * @description Lists the user's recent message threads.
+ *
+ * Security:
+ * - Requires authentication.
  */
 $router->get('/messages', 'MessagesController@index');
 
 /**
+ * Open or create a conversation thread with a specific user.
+ *
  * @method GET
- * @route  /messages/{user_uuid}
+ * @route /messages/{user_uuid}
  * @controller MessagesController@thread
- * @description Opens/creates a conversation thread with a specific user.
+ * @description Displays the conversation with the specified user.
+ *
+ * @param string $user_uuid The UUID of the other participant.
+ *
+ * Security:
+ * - Requires authentication.
  */
 $router->get('/messages/{user_uuid}', 'MessagesController@thread');
 
 /**
+ * Send a private message to the specified user.
+ *
  * @method POST
- * @route  /messages/{user_uuid}
+ * @route /messages/{user_uuid}
  * @controller MessagesController@send
- * @description Sends a private message to the user.
+ * @description Sends a new message in the conversation.
+ *
+ * @param string $user_uuid The UUID of the recipient.
+ *
+ * Security:
+ * - Requires authentication.
+ * - Must be CSRF-protected.
  */
 $router->post('/messages/{user_uuid}', 'MessagesController@send');

@@ -17,7 +17,6 @@
             </div>
         </div>
 
-        <button onclick="window.location.href='/user/profile/<?php echo $_SESSION['user_uuid']; ?>/edit'">Edit Profile</button>
         <button onclick="window.location.href='/user/profile/<?php echo $_SESSION['user_uuid']; ?>'">Profile</button>
         <button onclick="window.location.href='/logout'">Logout</button>
     </div>

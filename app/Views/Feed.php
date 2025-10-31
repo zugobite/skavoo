@@ -25,7 +25,9 @@
                             <div class="person-entry">
                                 <!-- Profile Picture -->
                                 <?php if (!empty($person['profile_picture'])): ?>
-                                    <img src="/uploads/<?= htmlspecialchars($person['profile_picture']) ?>" alt="Profile Picture" class="person-avatar">
+                                    <img class="profile-pic" id="avatar-preview-mini"
+                                        src="<?= \App\Helpers\e($person['profile_picture'] ?: '/images/avatar-default.png'); ?>"
+                                        alt="Profile Picture" class="profile-pic">
                                 <?php else: ?>
                                     <div class="person-avatar placeholder"></div>
                                 <?php endif; ?>

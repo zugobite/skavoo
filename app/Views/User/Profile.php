@@ -17,7 +17,9 @@
 
     <div class="cover">
         <?php if ($user['profile_picture']): ?>
-            <img src="/uploads/<?= htmlspecialchars($user['profile_picture']) ?>" alt="Profile Picture" class="profile-pic">
+            <img class="profile-pic" id="avatar-preview-mini"
+                src="<?= \App\Helpers\e($user['profile_picture'] ?: '/images/avatar-default.png'); ?>"
+                alt="Profile Picture" class="profile-pic">
         <?php else: ?>
             <div class="profile-pic placeholder"></div>
         <?php endif; ?>
@@ -60,11 +62,19 @@
     </div>
 
     <nav class="nav-tabs">
-        <a href="#">Timeline</a>
+        <?php if (isset($_SESSION['user_uuid']) && $_SESSION['user_uuid'] === $user['uuid']): ?>
+            <a href="/user/profile/<?php echo htmlspecialchars($_SESSION['user_uuid'], ENT_QUOTES, 'UTF-8'); ?>"
+                class="btn-edit-profile">
+                Timeline
+            </a>
+        <?php endif; ?>
         <a href="#">Friends</a>
         <a href="#">Photos</a>
-        <?php if ($_SESSION['user_uuid'] === $user['uuid']): ?>
-            <a href="#">Edit Profile</a>
+        <?php if (isset($_SESSION['user_uuid']) && $_SESSION['user_uuid'] === $user['uuid']): ?>
+            <a href="/user/profile/<?php echo htmlspecialchars($_SESSION['user_uuid'], ENT_QUOTES, 'UTF-8'); ?>/edit"
+                class="btn-edit-profile">
+                Edit Profile
+            </a>
         <?php endif; ?>
     </nav>
 
