@@ -53,8 +53,7 @@
                     <?php endif; ?>
                 </section>
 
-                <form action="/messages/compose" method="GET">
-                    <input type="hidden" name="to" value="<?= $user['uuid'] ?>">
+                <form action="/messages/<?= \App\Helpers\e($user['uuid']); ?>" method="GET" style="margin:0;">
                     <button type="submit" style="width: 100%;">Message</button>
                 </form>
             </div>
@@ -76,6 +75,7 @@
                 Edit Profile
             </a>
         <?php endif; ?>
+        <a href="/messages">Messages</a>
     </nav>
 
     <div class="container">

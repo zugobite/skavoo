@@ -76,6 +76,7 @@
                 Edit Profile
             </a>
         <?php endif; ?>
+        <a href="/messages">Messages</a>
     </nav>
 
     <div class="container">

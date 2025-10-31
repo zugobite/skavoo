@@ -1,135 +1,97 @@
 <?php
 
-/**
- * @var array  $partner
- * @var array  $messages
- * @var string $csrf
- */
-
-use function App\Helpers\e;
-
-include __DIR__ . '/../Components/Header.php';
-$meId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
+/** @var array $other */
+/** @var array $messages */
+/** @var string $csrf */
+$meUuid = $_SESSION['user_uuid'] ?? '';
+$meId   = $_SESSION['user_id'] ?? 0;
 ?>
-<div class="container">
-    <div class="thread-header">
-        <img class="avatar" src="<?= e($partner['profile_picture'] ? $partner['profile_picture'] : '/images/avatar-default.png'); ?>" alt="">
-        <div>
-            <h1><?= e($partner['full_name']); ?></h1>
-            <small class="text-muted">@<?= e($partner['uuid']); ?></small>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chat with <?= \App\Helpers\e($other['name']); ?> | Skavoo</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;700&display=swap" rel="stylesheet">
+
+    <script src="/js/search.js" defer></script>
+</head>
+
+<body>
+    <?php include __DIR__ . '/../Components/Header.php'; ?>
+
+    <div class="container">
+        <aside class="sidebar">
+            <div class="card">
+                <h2>Chatting With</h2>
+                <div class="row" style="display:flex; align-items:center; gap:10px;">
+                    <?php if (!empty($other['profile_picture'])): ?>
+                        <img class="profile-pic-chat" id="avatar-preview-mini"
+                            src="<?= \App\Helpers\e($other['profile_picture'] ?: '/images/avatar-default.png'); ?>"
+                            alt="Profile Picture">
+                    <?php else: ?>
+                        <div class="post-avatar placeholder"></div>
+                    <?php endif; ?>
+                    <div><strong><?= \App\Helpers\e($other['name']); ?></strong></div>
+                </div>
+                <div style="margin-top:10px; gap:10px; display:flex;">
+                    <a class="btn secondary" href="/messages">Back to Inbox</a>
+                    <a class="btn" href="/user/profile/<?= \App\Helpers\e($other['uuid']); ?>">View Profile</a>
+                </div>
+            </div>
+        </aside>
+
+        <div class="content-wrapper">
+            <main class="content">
+                <div class="card">
+                    <?php if (!empty($_SESSION['flash_error'])): ?>
+                        <div class="flash error"><?= \App\Helpers\e($_SESSION['flash_error']); ?><?php unset($_SESSION['flash_error']); ?></div>
+                    <?php endif; ?>
+                    <?php if (!empty($_SESSION['flash_success'])): ?>
+                        <div class="flash success"><?= \App\Helpers\e($_SESSION['flash_success']); ?><?php unset($_SESSION['flash_success']); ?></div>
+                    <?php endif; ?>
+
+                    <div id="chat" class="chat-window">
+                        <?php foreach ($messages as $m): ?>
+                            <?php $mine = ((int)$m['sender_id'] === (int)$meId); ?>
+                            <div class="bubble <?= $mine ? 'me' : 'them' ?>">
+                                <div><?= nl2br(\App\Helpers\e($m['body'])); ?></div>
+                                <small><?= \App\Helpers\e(date('Y-m-d H:i', strtotime($m['created_at']))); ?></small>
+                            </div>
+                        <?php endforeach; ?>
+                        <div id="bottom"></div>
+                    </div>
+
+                    <form class="chat-form" action="/messages/<?= \App\Helpers\e($other['uuid']); ?>" method="post"
+                        style="display:flex; align-items:flex-end; gap:8px;">
+                        <input type="hidden" name="csrf" value="<?= \App\Helpers\e($csrf); ?>">
+
+                        <textarea name="body"
+                            placeholder="Write a message…"
+                            maxlength="3000"
+                            required></textarea>
+
+                        <button type="submit"
+                            style="flex:0 0 auto; height:35px; margin-bottom: 10px;">
+                            Send
+                        </button>
+                    </form>
+                </div>
+            </main>
         </div>
     </div>
 
-    <div class="thread-messages" id="thread-messages">
-        <?php foreach ($messages as $m): ?>
-            <?php $isMine = intval($m['sender_id']) === intval($meId); ?>
-            <div class="bubble <?= $isMine ? 'mine' : 'theirs' ?>">
-                <div class="content"><?= nl2br(e($m['content'])); ?></div>
-                <div class="time"><?= e(date('Y-m-d H:i', strtotime($m['created_at']))); ?></div>
-            </div>
-        <?php endforeach; ?>
-    </div>
+    <script>
+        // Auto-scroll to bottom (once)
+        const bottom = document.getElementById('bottom');
+        if (bottom) bottom.scrollIntoView({
+            behavior: 'instant',
+            block: 'end'
+        });
+    </script>
 
-    <form class="send-box" action="/messages/<?= e($partner['uuid']); ?>" method="post" id="send-message-form" novalidate>
-        <input type="hidden" name="csrf" value="<?= \App\Helpers\e($csrf); ?>">
-        
-        <textarea name="content" id="content" rows="2" maxlength="2000" placeholder="Write a message…" required></textarea>
-        <button type="submit" class="btn">Send</button>
-    </form>
-</div>
+</body>
 
-<script>
-    (function() {
-        var el = document.getElementById('thread-messages');
-        if (el) el.scrollTop = el.scrollHeight;
-    })();
-</script>
-
-<style>
-    .container {
-        max-width: 880px;
-        margin: 24px auto;
-        padding: 0 12px;
-    }
-
-    .thread-header {
-        display: flex;
-        gap: 12px;
-        align-items: center;
-        margin-bottom: 12px;
-    }
-
-    .avatar {
-        width: 48px;
-        height: 48px;
-        border-radius: 50%;
-        object-fit: cover;
-        background: #f3f3f3;
-    }
-
-    .thread-messages {
-        border: 1px solid #eee;
-        border-radius: 8px;
-        padding: 12px;
-        height: 54vh;
-        overflow: auto;
-        background: #fff;
-    }
-
-    .bubble {
-        max-width: 70%;
-        padding: 10px 12px;
-        margin: 8px 0;
-        border-radius: 12px;
-        position: relative;
-    }
-
-    .bubble.mine {
-        margin-left: auto;
-        background: #111;
-        color: #fff;
-        border-top-right-radius: 4px;
-    }
-
-    .bubble.theirs {
-        margin-right: auto;
-        background: #f6f6f6;
-        color: #111;
-        border-top-left-radius: 4px;
-    }
-
-    .bubble .time {
-        font-size: 0.8rem;
-        color: #999;
-        margin-top: 4px;
-        text-align: right;
-    }
-
-    .send-box {
-        margin-top: 12px;
-        display: flex;
-        gap: 8px;
-        align-items: flex-end;
-    }
-
-    .send-box textarea {
-        flex: 1;
-        resize: vertical;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        padding: 10px;
-    }
-
-    .btn {
-        padding: 10px 16px;
-        border-radius: 8px;
-        background: #111;
-        color: #fff;
-        border: none;
-        cursor: pointer;
-    }
-
-    .text-muted {
-        color: #888;
-    }
-</style>
+</html>
