@@ -7,7 +7,7 @@
     </div>
 
     <div class="header-right">
-        <div class="notification-wrapper">
+        <!-- <div class="notification-wrapper">
             <span class="notification-icon" id="notificationToggle" title="Notifications">
                 🔔
                 <span class="notification-badge" id="notificationCount">3</span>
@@ -15,7 +15,7 @@
             <div class="notification-dropdown" id="notificationDropdown">
                 <p>No notifications yet.</p>
             </div>
-        </div>
+        </div> -->
 
         <button onclick="window.location.href='/user/profile/<?php echo $_SESSION['user_uuid']; ?>'">Profile</button>
         <button onclick="window.location.href='/logout'">Logout</button>

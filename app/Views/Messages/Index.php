@@ -34,8 +34,7 @@
                                                 src="<?= \App\Helpers\e($c['profile_picture'] ?: '/images/avatar-default.png'); ?>"
                                                 alt="Profile Picture">
                                         <?php else: ?>
-                                            <div class="post-avatar placeholder"
-                                                style="width:40px; height:40px; border-radius:50%; background:#e5e7eb;"></div>
+                                            <div class="post-avatar placeholder"></div>
                                         <?php endif; ?>
 
                                         <div style="flex:1;">

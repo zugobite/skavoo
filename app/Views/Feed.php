@@ -17,7 +17,7 @@
     <div class="feed-layout">
         <!-- Sidebar -->
         <aside class="people-sidebar">
-            <h1>People You May Know</h1>
+            <h2>People You May Know</h2>
             <ul class="people-list">
                 <?php if (!empty($people) && is_array($people)): ?>
                     <?php foreach ($people as $person): ?>
@@ -32,17 +32,14 @@
                                     <div class="person-avatar placeholder"></div>
                                 <?php endif; ?>
 
-                                <!-- Name and Add Friend -->
+                                <!-- Name -->
                                 <strong>
                                     <a href="/user/profile/<?= htmlspecialchars($person['uuid'] ?? '') ?>">
                                         <?= htmlspecialchars($person['full_name'] ?? 'Unknown User') ?>
                                     </a>
                                 </strong>
 
-                                <form action="/friends/send" method="POST">
-                                    <input type="hidden" name="receiver_id" value="<?= $person['id'] ?>">
-                                    <button type="submit">Add Friend</button>
-                                </form>
+                                <div style="width: 50px"></div>
                             </div>
                         </li>
                     <?php endforeach; ?>
