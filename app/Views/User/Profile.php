@@ -32,6 +32,38 @@
 
         <div class="profile-name"><?= htmlspecialchars($user['full_name']) ?></div>
 
+    <div class="profile-details">
+        <?php if (!empty($user['bio'])): ?>
+            <div class="profile-bio">"<?= nl2br(\App\Helpers\e($user['bio'])) ?>"</div>
+        <?php endif; ?>
+        <ul class="profile-fields">
+            <?php if (!empty($user['birthday'])): ?>
+                <li><strong>Birthday:</strong> <?= date('F j, Y', strtotime($user['birthday'])) ?></li>
+            <?php endif; ?>
+            <?php if (!empty($user['gender'])): ?>
+                <li><strong>Gender:</strong> <?= ucfirst(str_replace('_', ' ', $user['gender'])) ?></li>
+            <?php endif; ?>
+            <?php if (!empty($user['location'])): ?>
+                <li><strong>Location:</strong> <?= \App\Helpers\e($user['location']) ?></li>
+            <?php endif; ?>
+            <?php if (!empty($user['relationship_status'])): ?>
+                <li><strong>Relationship:</strong> <?= ucfirst(str_replace('_', ' ', $user['relationship_status'])) ?></li>
+            <?php endif; ?>
+            <?php if (!empty($user['work'])): ?>
+                <li><strong>Work:</strong> <?= \App\Helpers\e($user['work']) ?></li>
+            <?php endif; ?>
+            <?php if (!empty($user['education'])): ?>
+                <li><strong>Education:</strong> <?= \App\Helpers\e($user['education']) ?></li>
+            <?php endif; ?>
+            <?php if (!empty($user['website'])): ?>
+                <li><strong>Website:</strong> <a href="<?= \App\Helpers\e($user['website']) ?>" target="_blank" rel="noopener noreferrer">Visit</a></li>
+            <?php endif; ?>
+            <?php if (!empty($user['phone'])): ?>
+                <li><strong>Phone:</strong> <?= \App\Helpers\e($user['phone']) ?></li>
+            <?php endif; ?>
+        </ul>
+    </div>
+
         <?php if ($_SESSION['user_uuid'] !== $user['uuid']): ?>
             <div class="friend-msg-actions">
                 <section id="friendship-status">
@@ -62,7 +94,7 @@
                             <form action="/friends/cancel" method="POST">
                                 <input type="hidden" name="csrf" value="<?= \App\Helpers\e($csrf); ?>">
                                 <input type="hidden" name="receiver_id" value="<?= $user['id'] ?>">
-                                <button type="submit" class="btn">Cancel Request</button>
+                                <button type="submit" class="btn">❌ Cancel Request</button>
                             </form>
                         <?php else: ?>
                             <!-- They sent me a request - show Accept/Decline buttons -->
@@ -135,30 +167,32 @@
             ?>
 
             <div class="friends-list">
-                <h2>Friends</h2>
-                <?php if ($friends): ?>
-                    <ul class="friends-list-avatars">
-                        <?php foreach ($friends as $friend): ?>
-                            <li class="friend-list-item">
-                                <a href="/user/profile/<?= htmlspecialchars($friend['uuid']) ?>">
-                                    <img src="<?= \App\Helpers\e(\App\Helpers\profilePicturePath($friend['profile_picture'] ?? null)); ?>" 
-                                         alt="<?= htmlspecialchars($friend['full_name']) ?>" 
-                                         class="friend-avatar">
-                                </a>
-                                <div class="friend-info">
-                                    <a href="/user/profile/<?= htmlspecialchars($friend['uuid']) ?>" class="friend-name">
-                                        <?= htmlspecialchars($friend['full_name']) ?>
+                <div class="card">
+                    <h2>Friends</h2>
+                    <?php if ($friends): ?>
+                        <ul class="friends-list-avatars">
+                            <?php foreach ($friends as $friend): ?>
+                                <li class="friend-list-item">
+                                    <a href="/user/profile/<?= htmlspecialchars($friend['uuid']) ?>">
+                                        <img src="<?= \App\Helpers\e(\App\Helpers\profilePicturePath($friend['profile_picture'] ?? null)); ?>" 
+                                            alt="<?= htmlspecialchars($friend['full_name']) ?>" 
+                                            class="friend-avatar">
                                     </a>
-                                    <div class="friend-date">
-                                        <small>Became friends: <?= date('M d, Y', strtotime($friend['became_friends_at'])) ?></small>
+                                    <div class="friend-info">
+                                        <a href="/user/profile/<?= htmlspecialchars($friend['uuid']) ?>" class="friend-name">
+                                            <?= htmlspecialchars($friend['full_name']) ?>
+                                        </a>
+                                        <div class="friends-since">
+                                            <small>Became friends: <?= date('M d, Y', strtotime($friend['became_friends_at'])) ?></small>
+                                        </div>
                                     </div>
-                                </div>
-                            </li>
-                        <?php endforeach; ?>
-                    </ul>
-                <?php else: ?>
-                    <p class="no-content"><?= $is_own_profile ? 'You have no friends yet.' : "{$first_name} has no friends yet." ?></p>
-                <?php endif; ?>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    <?php else: ?>
+                        <p class="no-content"><?= $is_own_profile ? 'You have no friends yet.' : "{$first_name} has no friends yet." ?></p>
+                    <?php endif; ?>
+                </div>
             </div>
         </aside>
 

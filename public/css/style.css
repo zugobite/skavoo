@@ -4,11 +4,13 @@
   padding: 0;
   margin: 0;
 }
+
 .friend-list-item {
   display: flex;
   align-items: center;
   margin-bottom: 12px;
 }
+
 .friend-avatar {
   width: 36px;
   height: 36px;
@@ -18,19 +20,18 @@
   object-fit: cover;
   background: #fff;
 }
+
 .friend-info {
   display: flex;
   flex-direction: column;
 }
+
 .friend-name {
   font-weight: bold;
   color: var(--text-primary, #222);
   text-decoration: none;
 }
-.friend-date {
-  font-size: 11px;
-  color: var(--text-muted, #888);
-}
+
 /* Centered logo container for auth and home pages */
 .center-logo-container {
   display: flex;
@@ -1554,16 +1555,6 @@ header {
   gap: 8px;
 }
 
-.friends-badge {
-  display: inline-block;
-  padding: 8px 16px;
-  background: var(--color-success-bg);
-  color: var(--color-success-text);
-  border: 2px solid var(--color-success);
-  border-radius: var(--border-radius);
-  font-weight: bold;
-}
-
 /* =====================================================
    PROFILE PAGE
    ===================================================== */
@@ -1713,11 +1704,16 @@ header {
 /* =====================================================
    CARD COMPONENT
    ===================================================== */
+
 .card {
   background: var(--bg-white);
   border: 2px solid var(--border-color);
   border-radius: var(--border-radius);
   padding: var(--spacing-lg);
+}
+
+.card:not(:first-child) {
+  margin-top: var(--spacing-lg);
 }
 
 .card + .card {

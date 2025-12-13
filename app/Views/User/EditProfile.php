@@ -140,6 +140,85 @@
                             <?php endif; ?>
                         </div>
 
+                        <div class="form-group">
+                            <textarea class="form-control" id="bio" name="bio" maxlength="1000" placeholder="Bio (about you)"><?= \App\Helpers\e($user['bio'] ?? ''); ?></textarea>
+                            <span class="help">Tell people about yourself. 1000 characters max.</span>
+                            <?php if (!empty($errors['bio'])): ?>
+                                <div class="error"><?= \App\Helpers\e($errors['bio']); ?></div>
+                            <?php endif; ?>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="birthday">Birthday</label>
+                            <input class="form-control" type="date" id="birthday" name="birthday" value="<?= \App\Helpers\e($user['birthday'] ?? ''); ?>">
+                            <?php if (!empty($errors['birthday'])): ?>
+                                <div class="error"><?= \App\Helpers\e($errors['birthday']); ?></div>
+                            <?php endif; ?>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="gender">Gender</label>
+                            <select class="form-control" id="gender" name="gender">
+                                <option value="">-- Select --</option>
+                                <option value="male" <?= (isset($user['gender']) && $user['gender'] === 'male') ? 'selected' : '' ?>>Male</option>
+                                <option value="female" <?= (isset($user['gender']) && $user['gender'] === 'female') ? 'selected' : '' ?>>Female</option>
+                                <option value="other" <?= (isset($user['gender']) && $user['gender'] === 'other') ? 'selected' : '' ?>>Other</option>
+                                <option value="prefer_not_to_say" <?= (isset($user['gender']) && $user['gender'] === 'prefer_not_to_say') ? 'selected' : '' ?>>Prefer not to say</option>
+                            </select>
+                            <?php if (!empty($errors['gender'])): ?>
+                                <div class="error"><?= \App\Helpers\e($errors['gender']); ?></div>
+                            <?php endif; ?>
+                        </div>
+
+                        <div class="form-group">
+                            <input class="form-control" type="text" id="location" name="location" maxlength="100" placeholder="Location (City, Country)" value="<?= \App\Helpers\e($user['location'] ?? ''); ?>">
+                            <?php if (!empty($errors['location'])): ?>
+                                <div class="error"><?= \App\Helpers\e($errors['location']); ?></div>
+                            <?php endif; ?>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="relationship_status">Relationship Status</label>
+                            <select class="form-control" id="relationship_status" name="relationship_status">
+                                <option value="">-- Select --</option>
+                                <option value="single" <?= (isset($user['relationship_status']) && $user['relationship_status'] === 'single') ? 'selected' : '' ?>>Single</option>
+                                <option value="in_a_relationship" <?= (isset($user['relationship_status']) && $user['relationship_status'] === 'in_a_relationship') ? 'selected' : '' ?>>In a relationship</option>
+                                <option value="married" <?= (isset($user['relationship_status']) && $user['relationship_status'] === 'married') ? 'selected' : '' ?>>Married</option>
+                                <option value="complicated" <?= (isset($user['relationship_status']) && $user['relationship_status'] === 'complicated') ? 'selected' : '' ?>>It's complicated</option>
+                            </select>
+                            <?php if (!empty($errors['relationship_status'])): ?>
+                                <div class="error"><?= \App\Helpers\e($errors['relationship_status']); ?></div>
+                            <?php endif; ?>
+                        </div>
+
+                        <div class="form-group">
+                            <input class="form-control" type="text" id="work" name="work" maxlength="100" placeholder="Work (Job/Company)" value="<?= \App\Helpers\e($user['work'] ?? ''); ?>">
+                            <?php if (!empty($errors['work'])): ?>
+                                <div class="error"><?= \App\Helpers\e($errors['work']); ?></div>
+                            <?php endif; ?>
+                        </div>
+
+                        <div class="form-group">
+                            <input class="form-control" type="text" id="education" name="education" maxlength="100" placeholder="Education (School/University)" value="<?= \App\Helpers\e($user['education'] ?? ''); ?>">
+                            <?php if (!empty($errors['education'])): ?>
+                                <div class="error"><?= \App\Helpers\e($errors['education']); ?></div>
+                            <?php endif; ?>
+                        </div>
+
+                        <div class="form-group">
+                            <input class="form-control" type="url" id="website" name="website" maxlength="100" placeholder="Website (https://...)" value="<?= \App\Helpers\e($user['website'] ?? ''); ?>">
+                            <?php if (!empty($errors['website'])): ?>
+                                <div class="error"><?= \App\Helpers\e($errors['website']); ?></div>
+                            <?php endif; ?>
+                        </div>
+
+                        <div class="form-group">
+                            <input class="form-control" type="text" id="phone" name="phone" maxlength="30" placeholder="Phone" value="<?= \App\Helpers\e($user['phone'] ?? ''); ?>">
+                            <?php if (!empty($errors['phone'])): ?>
+                                <div class="error"><?= \App\Helpers\e($errors['phone']); ?></div>
+                            <?php endif; ?>
+                        </div>
+
                         <div class="actions" style="margin-top: 10px !important;">
                             <button type="submit" class="btn">Save Changes</button>
                             <a href="/user/profile/<?= \App\Helpers\e($user['uuid']); ?>">Cancel</a>

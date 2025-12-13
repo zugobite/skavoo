@@ -100,7 +100,7 @@
                                     <form action="/friends/cancel" method="POST">
                                         <input type="hidden" name="csrf" value="<?= \App\Helpers\e($csrf); ?>">
                                         <input type="hidden" name="receiver_id" value="<?= (int)$request['id']; ?>">
-                                        <button type="submit" class="btn">Cancel Request</button>
+                                        <button type="submit" class="btn">❌ Cancel Request</button>
                                     </form>
                                 </div>
                             </div>

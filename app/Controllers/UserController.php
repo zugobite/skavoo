@@ -77,7 +77,7 @@ class UserController
 
         $pdo = DB::pdo();
 
-        $stmt = $pdo->prepare("SELECT id, uuid, email, full_name, profile_picture FROM users WHERE uuid = :uuid LIMIT 1");
+        $stmt = $pdo->prepare("SELECT id, uuid, email, full_name, profile_picture, bio, birthday, gender, location, relationship_status, work, education, website, phone FROM users WHERE uuid = :uuid LIMIT 1");
         $stmt->execute([':uuid' => $uuid]);
         $user = $stmt->fetch(\PDO::FETCH_ASSOC);
 
@@ -122,7 +122,7 @@ class UserController
         $pdo = DB::pdo();
 
         // Load current record (to know current avatar path, etc.)
-        $stmt = $pdo->prepare("SELECT id, uuid, full_name, profile_picture FROM users WHERE uuid = :uuid LIMIT 1");
+        $stmt = $pdo->prepare("SELECT id, uuid, full_name, profile_picture, bio, birthday, gender, location, relationship_status, work, education, website, phone FROM users WHERE uuid = :uuid LIMIT 1");
         $stmt->execute([':uuid' => $uuid]);
         $user = $stmt->fetch(\PDO::FETCH_ASSOC);
 
@@ -134,12 +134,51 @@ class UserController
 
         // Validate inputs
         $fullName = trim($_POST['full_name'] ?? '');
+        $bio = trim($_POST['bio'] ?? '');
+        $birthday = trim($_POST['birthday'] ?? '');
+        $gender = trim($_POST['gender'] ?? '');
+        $location = trim($_POST['location'] ?? '');
+        $relationship_status = trim($_POST['relationship_status'] ?? '');
+        $work = trim($_POST['work'] ?? '');
+        $education = trim($_POST['education'] ?? '');
+        $website = trim($_POST['website'] ?? '');
+        $phone = trim($_POST['phone'] ?? '');
         $errors = [];
 
         if ($fullName === '') {
             $errors['full_name'] = 'Display name is required.';
         } elseif (mb_strlen($fullName) > 120) {
             $errors['full_name'] = 'Display name must be 120 characters or fewer.';
+        }
+        if (mb_strlen($bio) > 1000) {
+            $errors['bio'] = 'Bio must be 1000 characters or fewer.';
+        }
+        if ($birthday && !preg_match('/^\d{4}-\d{2}-\d{2}$/', $birthday)) {
+            $errors['birthday'] = 'Invalid birthday format.';
+        }
+        if ($gender && !in_array($gender, ['male', 'female', 'other', 'prefer_not_to_say'], true)) {
+            $errors['gender'] = 'Invalid gender.';
+        }
+        if (mb_strlen($location) > 100) {
+            $errors['location'] = 'Location must be 100 characters or fewer.';
+        }
+        if ($relationship_status && !in_array($relationship_status, ['single', 'in_a_relationship', 'married', 'complicated'], true)) {
+            $errors['relationship_status'] = 'Invalid relationship status.';
+        }
+        if (mb_strlen($work) > 100) {
+            $errors['work'] = 'Work must be 100 characters or fewer.';
+        }
+        if (mb_strlen($education) > 100) {
+            $errors['education'] = 'Education must be 100 characters or fewer.';
+        }
+        if ($website && !filter_var($website, FILTER_VALIDATE_URL)) {
+            $errors['website'] = 'Invalid website URL.';
+        }
+        if (mb_strlen($website) > 100) {
+            $errors['website'] = 'Website must be 100 characters or fewer.';
+        }
+        if (mb_strlen($phone) > 30) {
+            $errors['phone'] = 'Phone must be 30 characters or fewer.';
         }
 
         $newAvatarPath = null;
@@ -202,6 +241,15 @@ class UserController
             $csrf = Csrf::token();
             $user = array_merge($user, [
                 'full_name'       => $fullName !== '' ? $fullName : $user['full_name'],
+                'bio'             => $bio,
+                'birthday'        => $birthday,
+                'gender'          => $gender,
+                'location'        => $location,
+                'relationship_status' => $relationship_status,
+                'work'            => $work,
+                'education'       => $education,
+                'website'         => $website,
+                'phone'           => $phone,
                 'profile_picture' => $newAvatarPath ?: $user['profile_picture'],
             ]);
             require __DIR__ . '/../Views/User/EditProfile.php';
@@ -209,16 +257,25 @@ class UserController
         }
 
         // Persist changes
-        $sql    = "UPDATE users SET full_name = :name, updated_at = CURRENT_TIMESTAMP";
-        $params = [':name' => $fullName, ':uuid' => $uuid];
-
+        $sql = "UPDATE users SET full_name = :name, bio = :bio, birthday = :birthday, gender = :gender, location = :location, relationship_status = :relationship_status, work = :work, education = :education, website = :website, phone = :phone, updated_at = CURRENT_TIMESTAMP";
+        $params = [
+            ':name' => $fullName,
+            ':bio' => $bio,
+            ':birthday' => $birthday ?: null,
+            ':gender' => $gender ?: null,
+            ':location' => $location,
+            ':relationship_status' => $relationship_status ?: null,
+            ':work' => $work,
+            ':education' => $education,
+            ':website' => $website,
+            ':phone' => $phone,
+            ':uuid' => $uuid
+        ];
         if ($newAvatarPath) {
             $sql .= ", profile_picture = :pic";
             $params[':pic'] = $newAvatarPath;
         }
-
         $sql .= " WHERE uuid = :uuid LIMIT 1";
-
         $upd = $pdo->prepare($sql);
         $upd->execute($params);
 

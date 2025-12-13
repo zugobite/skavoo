@@ -52,7 +52,7 @@
                 <a href="/user/profile/<?php echo $_SESSION['user_uuid']; ?>" class="user-menu-item">
                     👤 My Profile
                 </a>
-                <a href="/user/profile/edit" class="user-menu-item">
+                <a href="/user/profile/<?php echo $_SESSION['user_uuid']; ?>/edit" class="user-menu-item">
                     ⚙️ Edit Profile
                 </a>
                 <div class="user-menu-divider"></div>
