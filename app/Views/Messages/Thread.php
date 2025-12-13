@@ -32,9 +32,17 @@ $meId   = $_SESSION['user_id'] ?? 0;
                         alt="Profile Picture">
                     <div><strong><?= \App\Helpers\e($other['name']); ?></strong></div>
                 </div>
-                <div style="margin-top:10px; gap:10px; display:flex;">
-                    <a class="btn secondary" href="/messages">Back to Inbox</a>
-                    <a class="btn" href="/user/profile/<?= \App\Helpers\e($other['uuid']); ?>">View Profile</a>
+                <div style="margin-top:10px; display:flex; gap:10px;">
+                    <a class="btn" href="/messages" 
+                    style="flex:1; width:100%; text-align:center;">
+                    Back to Inbox
+                    </a>
+
+                    <a class="btn" 
+                    href="/user/profile/<?= \App\Helpers\e($other['uuid']); ?>" 
+                    style="flex:1; width:100%; text-align:center;">
+                    View Profile
+                    </a>
                 </div>
             </div>
         </aside>
@@ -64,13 +72,13 @@ $meId   = $_SESSION['user_id'] ?? 0;
                         style="display:flex; align-items:flex-end; gap:8px;">
                         <input type="hidden" name="csrf" value="<?= \App\Helpers\e($csrf); ?>">
 
-                        <textarea name="body"
+                        <input type="text" name="body"
                             placeholder="Write a message…"
                             maxlength="3000"
-                            required></textarea>
+                            row=1
+                            required>
 
-                        <button type="submit"
-                            style="flex:0 0 auto; height:35px; margin-bottom: 10px;">
+                        <button type="submit" class="btn">
                             Send
                         </button>
                     </form>

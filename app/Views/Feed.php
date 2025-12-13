@@ -263,7 +263,7 @@
                                     <img src="<?= \App\Helpers\e(\App\Helpers\profilePicturePath($_SESSION['profile_picture'] ?? null)); ?>" 
                                          alt="Your avatar" class="comment-avatar">
                                     <input type="text" name="comment" placeholder="Write a comment..." 
-                                           class="comment-input" required maxlength="1000">
+                                           required maxlength="1000">
                                     <button type="submit" class="btn">Post</button>
                                 </form>
                             </div>
