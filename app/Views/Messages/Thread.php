@@ -27,13 +27,9 @@ $meId   = $_SESSION['user_id'] ?? 0;
             <div class="card">
                 <h2>Chatting With</h2>
                 <div class="row" style="display:flex; align-items:center; gap:10px;">
-                    <?php if (!empty($other['profile_picture'])): ?>
-                        <img class="profile-pic-chat" id="avatar-preview-mini"
-                            src="<?= \App\Helpers\e($other['profile_picture'] ?: '/images/avatar-default.png'); ?>"
-                            alt="Profile Picture">
-                    <?php else: ?>
-                        <div class="post-avatar placeholder"></div>
-                    <?php endif; ?>
+                    <img class="profile-pic-chat" id="avatar-preview-mini"
+                        src="<?= \App\Helpers\e(\App\Helpers\profilePicturePath($other['profile_picture'] ?? null)); ?>"
+                        alt="Profile Picture">
                     <div><strong><?= \App\Helpers\e($other['name']); ?></strong></div>
                 </div>
                 <div style="margin-top:10px; gap:10px; display:flex;">

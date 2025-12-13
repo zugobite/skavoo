@@ -24,8 +24,8 @@
         }
     }
     ?>
-    <div>
-        <div class="logo" style="margin-left: 110px; margin-bottom: 25px;">SKAVOO</div>
+    <div class="center-logo-container">
+        <div class="logo">SKAVOO</div>
 
         <div class="login-window">
             <div class="window-header">
@@ -56,7 +56,7 @@
                     <?php endif; ?>
 
                     <label for="email">Email Address</label>
-                    <input type="email" id="email" name="email" required>
+                    <input type="email" id="email" name="email" placeholder="Email Address" required>
 
                     <button type="submit">Reset Password</button>
                 </form>

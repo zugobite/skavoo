@@ -32,16 +32,33 @@ class SearchController
             return;
         }
 
-        // Search by full_name or email (case-insensitive)
+        // Search by full_name, email, or display_name (case-insensitive)
         $stmt = $pdo->prepare("
-            SELECT uuid, full_name, email
+            SELECT uuid, full_name, display_name, email, profile_picture
             FROM users
-            WHERE full_name LIKE :query OR email LIKE :query
+            WHERE (full_name LIKE :query1 OR email LIKE :query2 OR (display_name IS NOT NULL AND display_name LIKE :query3))
+            ORDER BY 
+                CASE 
+                    WHEN full_name LIKE :exact1 OR (display_name IS NOT NULL AND display_name LIKE :exact2) THEN 1
+                    WHEN full_name LIKE :starts1 OR (display_name IS NOT NULL AND display_name LIKE :starts2) THEN 2
+                    ELSE 3
+                END,
+                full_name ASC
             LIMIT 10
         ");
 
+        $queryPattern = '%' . $query . '%';
+        $exactPattern = $query;
+        $startsPattern = $query . '%';
+
         $stmt->execute([
-            'query' => '%' . $query . '%'
+            'query1' => $queryPattern,
+            'query2' => $queryPattern,
+            'query3' => $queryPattern,
+            'exact1' => $exactPattern,
+            'exact2' => $exactPattern,
+            'starts1' => $startsPattern,
+            'starts2' => $startsPattern
         ]);
 
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);

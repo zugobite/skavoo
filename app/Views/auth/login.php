@@ -9,8 +9,8 @@
 </head>
 
 <body class="xp-bg">
-    <div>
-        <div class="logo" style="margin-left: 110px; margin-bottom: 25px;">SKAVOO</div>
+    <div class="center-logo-container">
+        <div class="logo">SKAVOO</div>
 
         <div class="login-window">
             <div class="window-header">
@@ -20,10 +20,10 @@
             <div class="window-body">
                 <form method="POST" action="/login" autocomplete="off">
                     <label for="email">Email</label>
-                    <input type="email" id="email" name="email" required>
+                    <input type="email" id="email" name="email" placeholder="Email" required>
 
                     <label for="password">Password</label>
-                    <input type="password" id="password" name="password" required>
+                    <input type="password" id="password" name="password" placeholder="Password" required>
 
                     <button type="submit">Login</button>
                 </form>

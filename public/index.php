@@ -17,6 +17,7 @@
 require_once __DIR__ . '/../app/Core/Router.php';
 require_once __DIR__ . '/../app/Support/global_helpers.php';
 require_once __DIR__ . '/../app/Support/namespace_aliases.php';
+require_once __DIR__ . '/../app/Helpers/Functions.php';
 
 // Instantiate the Router
 $router = new Router();

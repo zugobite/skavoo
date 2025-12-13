@@ -10,8 +10,8 @@
 </head>
 
 <body class="xp-bg">
-    <div>
-        <div class="logo" style="margin-left: 110px; margin-bottom: 25px;">SKAVOO</div>
+    <div class="center-logo-container">
+        <div class="logo">SKAVOO</div>
 
         <div class="login-window">
             <div class="window-header">
@@ -39,11 +39,11 @@
 
                     <input type="hidden" name="token" value="<?= htmlspecialchars($_GET['token'] ?? $token ?? '', ENT_QUOTES) ?>">
 
-                    <label for="password">New password</label>
-                    <input type="password" id="password" name="password" required minlength="8">
+                    <label for="password">New Password</label>
+                    <input type="password" id="password" name="password" placeholder="New Password" required minlength="8">
  
-                    <label for="password_confirm">Confirm new password</label>
-                    <input type="password" id="password_confirm" name="password_confirm" required minlength="8">
+                    <label for="password_confirm">Confirm New Password</label>
+                    <input type="password" id="password_confirm" name="password_confirm" placeholder="Confirm New Password" required minlength="8">
 
                     <button type="submit">Update Password</button>
                 </form>

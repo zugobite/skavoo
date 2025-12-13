@@ -9,20 +9,26 @@
     <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;700&display=swap" rel="stylesheet">
 
     <script src="/js/search.js" defer></script>
+    <script src="/js/feed.js" defer></script>
 </head>
 
 <body>
-    <?php include __DIR__ . '/../Components/Header.php'; ?>
+    <?php 
+    include __DIR__ . '/../Components/Header.php';
+    $csrf = \App\Helpers\Csrf::token();
+    ?>
 
+    <?php if (!empty($_SESSION['flash_success'])): ?>
+        <div class="flash success container-flash"><?= \App\Helpers\e($_SESSION['flash_success']); ?><?php unset($_SESSION['flash_success']); ?></div>
+    <?php endif; ?>
+    <?php if (!empty($_SESSION['flash_error'])): ?>
+        <div class="flash error container-flash"><?= \App\Helpers\e($_SESSION['flash_error']); ?><?php unset($_SESSION['flash_error']); ?></div>
+    <?php endif; ?>
 
     <div class="cover">
-        <?php if ($user['profile_picture']): ?>
-            <img class="profile-pic" id="avatar-preview-mini"
-                src="<?= \App\Helpers\e($user['profile_picture'] ?: '/images/avatar-default.png'); ?>"
-                alt="Profile Picture" class="profile-pic">
-        <?php else: ?>
-            <div class="profile-pic placeholder"></div>
-        <?php endif; ?>
+        <img class="profile-pic" id="avatar-preview-mini"
+            src="<?= \App\Helpers\e(\App\Helpers\profilePicturePath($user['profile_picture'] ?? null)); ?>"
+            alt="Profile Picture">
 
         <div class="profile-name"><?= htmlspecialchars($user['full_name']) ?></div>
 
@@ -30,7 +36,8 @@
             <div class="friend-msg-actions">
                 <section id="friendship-status">
                     <?php
-                    $stmt = $pdo->prepare("SELECT status FROM friends WHERE 
+                    // Get friendship details including who sent the request
+                    $stmt = $pdo->prepare("SELECT id, sender_id, receiver_id, status FROM friends WHERE 
                         (sender_id = :me AND receiver_id = :other)
                         OR (sender_id = :other AND receiver_id = :me)
                         LIMIT 1");
@@ -38,23 +45,55 @@
                         ':me' => $_SESSION['user_id'],
                         ':other' => $user['id']
                     ]);
-                    $friendship = $stmt->fetch();
+                    $friendship = $stmt->fetch(\PDO::FETCH_ASSOC);
                     ?>
 
                     <?php if (!$friendship): ?>
+                        <!-- No friendship exists - show Add Friend button -->
                         <form action="/friends/send" method="POST">
+                            <input type="hidden" name="csrf" value="<?= \App\Helpers\e($csrf); ?>">
                             <input type="hidden" name="receiver_id" value="<?= $user['id'] ?>">
-                            <button type="submit">Add Friend</button>
+                            <button type="submit" class="btn">➕ Add Friend</button>
                         </form>
+
                     <?php elseif ($friendship['status'] === 'pending'): ?>
-                        <p>Friend request pending</p>
+                        <?php if ((int)$friendship['sender_id'] === (int)$_SESSION['user_id']): ?>
+                            <!-- I sent the request - show Cancel button -->
+                            <form action="/friends/cancel" method="POST">
+                                <input type="hidden" name="csrf" value="<?= \App\Helpers\e($csrf); ?>">
+                                <input type="hidden" name="receiver_id" value="<?= $user['id'] ?>">
+                                <button type="submit" class="btn-secondary">Cancel Request</button>
+                            </form>
+                        <?php else: ?>
+                            <!-- They sent me a request - show Accept/Decline buttons -->
+                            <div class="friend-request-buttons">
+                                <form action="/friends/accept" method="POST" style="display:inline;">
+                                    <input type="hidden" name="csrf" value="<?= \App\Helpers\e($csrf); ?>">
+                                    <input type="hidden" name="request_id" value="<?= (int)$friendship['id']; ?>">
+                                    <button type="submit" class="btn">Accept</button>
+                                </form>
+                                <form action="/friends/reject" method="POST" style="display:inline;">
+                                    <input type="hidden" name="csrf" value="<?= \App\Helpers\e($csrf); ?>">
+                                    <input type="hidden" name="request_id" value="<?= (int)$friendship['id']; ?>">
+                                    <button type="submit" class="btn">Decline</button>
+                                </form>
+                            </div>
+                        <?php endif; ?>
+
                     <?php elseif ($friendship['status'] === 'accepted'): ?>
-                        <p>You are friends</p>
+                        <!-- Already friends - show Friends badge and Unfriend option -->
+                        <div class="friends-badge">✓ Friends</div>
+                        <form action="/friends/remove" method="POST" style="margin-top:5px;"
+                              onsubmit="return confirm('Are you sure you want to unfriend <?= \App\Helpers\e($user['full_name']); ?>?');">
+                            <input type="hidden" name="csrf" value="<?= \App\Helpers\e($csrf); ?>">
+                            <input type="hidden" name="friend_id" value="<?= $user['id'] ?>">
+                            <button type="submit" class="btn-unfriend-small">Unfriend</button>
+                        </form>
                     <?php endif; ?>
                 </section>
 
                 <form action="/messages/<?= \App\Helpers\e($user['uuid']); ?>" method="GET" style="margin:0;">
-                    <button type="submit" style="width: 100%;">Message</button>
+                    <button type="submit" style="width: 100%;">💬 Message</button>
                 </form>
             </div>
         <?php endif; ?>
@@ -67,7 +106,7 @@
                 Timeline
             </a>
         <?php endif; ?>
-        <a href="#">Friends</a>
+        <a href="/friends">Friends</a>
         <a href="#">Photos</a>
         <?php if (isset($_SESSION['user_uuid']) && $_SESSION['user_uuid'] === $user['uuid']): ?>
             <a href="/user/profile/<?php echo htmlspecialchars($_SESSION['user_uuid'], ENT_QUOTES, 'UTF-8'); ?>/edit"
@@ -98,26 +137,51 @@
                         <?php endforeach; ?>
                     </ul>
                 <?php else: ?>
-                    <p><?= $is_own_profile ? 'You have no friends yet.' : "{$first_name} has no friends yet." ?></p>
+                    <p class="no-content"><?= $is_own_profile ? 'You have no friends yet.' : "{$first_name} has no friends yet." ?></p>
                 <?php endif; ?>
             </div>
         </aside>
 
         <div class="content-wrapper">
             <?php if ($is_own_profile): ?>
-                <div class="content">
-                    <section id="create-post">
-                        <h2>Create Post</h2>
-                        <form method="POST" action="/user/post" enctype="multipart/form-data">
-                            <textarea name="content" rows="5" placeholder="What's on your mind?" required></textarea>
-                            <div class="file-input-wrapper">
-                                <label for="media">Choose File</label>
-                                <input type="file" name="media" id="media" accept="image/*,video/*" onchange="document.getElementById('media-name').textContent = this.files[0]?.name || 'No file chosen';">
-                                <span id="media-name" class="file-name">No file chosen</span>
+                <!-- Create Post Card -->
+                <div class="post-block create-post-card">
+                    <div class="card">
+                        <form action="/posts/create" method="POST" enctype="multipart/form-data" id="create-post-form">
+                            <input type="hidden" name="csrf" value="<?= \App\Helpers\e($csrf); ?>">
+                            
+                            <textarea name="content" 
+                                      placeholder="What's on your mind?" 
+                                      class="post-textarea" 
+                                      rows="2"
+                                      required
+                                      maxlength="5000"></textarea>
+
+                            <!-- Image Preview -->
+                            <div id="media-preview" class="media-preview" style="display:none;">
+                                <img id="preview-image" src="" alt="Preview" style="display:none;">
+                                <video id="preview-video" controls style="display:none;"></video>
+                                <button type="button" class="btn remove-media-pos" onclick="removeMediaPreview()">✕</button>
                             </div>
-                            <button type="submit" class="post-btn">Post</button>
+
+                            <div class="create-post-actions">
+                                <div class="post-options-left">
+                                    <label class="btn" title="Add Photo/Video">
+                                        Photo/Video
+                                        <input type="file" name="media" id="media-input" accept="image/*,video/*" 
+                                               onchange="previewMedia(this)" style="display:none;">
+                                    </label>
+                                    
+                                    <select name="visibility" class="visibility-select">
+                                        <option value="public">🌍 Public</option>
+                                        <option value="friends">👥 Friends</option>
+                                        <option value="private">🔒 Only Me</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn">Post</button>
+                            </div>
                         </form>
-                    </section>
+                    </div>
                 </div>
             <?php endif; ?>
 
@@ -149,11 +213,7 @@
                             <div class="post">
                                 <div class="post-header-layout">
                                     <div class="post-user-info">
-                                        <?php if (!empty($post['profile_picture'])): ?>
-                                            <img src="/uploads/<?= htmlspecialchars($post['profile_picture']) ?>" alt="Profile" class="post-avatar">
-                                        <?php else: ?>
-                                            <div class="post-avatar placeholder"></div>
-                                        <?php endif; ?>
+                                        <img src="<?= \App\Helpers\e(\App\Helpers\profilePicturePath($post['profile_picture'] ?? null)); ?>" alt="Profile" class="post-avatar">
                                         <div class="post-user-text">
                                             <strong><?= htmlspecialchars($post['full_name']) ?></strong>
                                             <small class="post-date"><?= date('Y-m-d H:i', strtotime($post['created_at'])) ?></small>
@@ -184,7 +244,7 @@
                             </div>
                         <?php endforeach; ?>
                     <?php else: ?>
-                        <p>No posts to display.</p>
+                        <p class="no-content">No posts to display.</p>
                     <?php endif; ?>
                 </section>
             </main>

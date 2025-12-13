@@ -16,13 +16,9 @@
 
 
     <div class="cover">
-        <?php if ($user['profile_picture']): ?>
-            <img class="profile-pic" id="avatar-preview-mini"
-                src="<?= \App\Helpers\e($user['profile_picture'] ?: '/images/avatar-default.png'); ?>"
-                alt="Profile Picture" class="profile-pic">
-        <?php else: ?>
-            <div class="profile-pic placeholder"></div>
-        <?php endif; ?>
+        <img class="profile-pic" id="avatar-preview-mini"
+            src="<?= \App\Helpers\e(\App\Helpers\profilePicturePath($user['profile_picture'] ?? null)); ?>"
+            alt="Profile Picture">
 
         <div class="profile-name"><?= htmlspecialchars($user['full_name']) ?></div>
 
@@ -85,7 +81,7 @@
                 <h2>Profile Picture</h2>
                 <div class="avatar-input">
                     <img class="profile-pic" id="avatar-preview-mini"
-                        src="<?= \App\Helpers\e($user['profile_picture'] ?: '/images/avatar-default.png'); ?>"
+                        src="<?= \App\Helpers\e(\App\Helpers\profilePicturePath($user['profile_picture'] ?? null)); ?>"
                         alt="Preview">
                     <div>
                         <div class="file-input-wrapper">

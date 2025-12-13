@@ -29,24 +29,19 @@
                                 <a href="/messages/<?= \App\Helpers\e($c['other_uuid']); ?>"
                                     style="display:block; text-decoration:none; color:inherit; border-radius:8px; transition:background 0.2s ease;">
                                     <div class="row" style="display:flex; align-items:center; gap:10px;">
-                                        <?php if (!empty($c['profile_picture'])): ?>
-                                            <img class="profile-pic-chat" id="avatar-preview-mini"
-                                                src="<?= \App\Helpers\e($c['profile_picture'] ?: '/images/avatar-default.png'); ?>"
-                                                alt="Profile Picture">
-                                        <?php else: ?>
-                                            <div class="post-avatar placeholder"></div>
-                                        <?php endif; ?>
+                                        <img class="profile-pic-chat" id="avatar-preview-mini"
+                                            src="<?= \App\Helpers\e(\App\Helpers\profilePicturePath($c['profile_picture'] ?? null)); ?>"
+                                            alt="Profile Picture">
 
                                         <div style="flex:1;">
                                             <div><strong><?= \App\Helpers\e($c['other_name']); ?></strong></div>
-                                            <small class="muted" style="color:#6b7280;">
+                                            <small class="text-muted">
                                                 <?= \App\Helpers\e(mb_strimwidth($c['last_message'] ?? '', 0, 48, '…')); ?>
                                             </small>
                                         </div>
 
                                         <?php if ((int)$c['unread_count'] > 0): ?>
-                                            <span class="badge"
-                                                style="background:#4f46e5; color:#fff; border-radius:12px; padding:2px 8px; font-size:12px; font-weight:600; margin-left:auto;">
+                                            <span class="badge-inline">
                                                 <?= (int)$c['unread_count']; ?>
                                             </span>
                                         <?php endif; ?>
@@ -56,16 +51,16 @@
                         <?php endforeach; ?>
                     </ul>
                 <?php else: ?>
-                    <p class="muted" style="color:#6b7280;">No conversations yet.</p>
+                    <p class="no-content" style="margin-top: 0px !important; margin-bottom: 0px !important; padding-top: 0px !important; padding-bottom: 0px !important;">No conversations yet.</p>
                 <?php endif; ?>
             </div>
         </aside>
 
         <div class="content-wrapper">
             <main class="content">
-                <div class="card">
+                <div>
                     <h2>Messages</h2>
-                    <p class="muted">Select a conversation on the left, or start a new one from a user’s profile.</p>
+                    <p class="no-content">Select a conversation on the left, or start a new one from a user's profile.</p>
                     <?php if (!empty($_SESSION['flash_error'])): ?>
                         <div class="flash error"><?= \App\Helpers\e($_SESSION['flash_error']); ?><?php unset($_SESSION['flash_error']); ?></div>
                     <?php endif; ?>

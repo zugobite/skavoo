@@ -71,6 +71,8 @@ class AuthController
         $_SESSION['user_uuid'] = $user['uuid']; // Save UUID for routing
         $_SESSION['user_email'] = $user['email'];
         $_SESSION['display_name'] = $user['display_name'];
+        $_SESSION['profile_picture'] = $user['profile_picture']; // For displaying in header/feed
+        $_SESSION['full_name'] = $user['full_name'];
 
         // Redirect to feed (or user profile via UUID)
         header("Location: /feed");
@@ -123,14 +125,17 @@ class AuthController
         // Handle profile picture upload
         $filename = null;
         if ($profilePicture && $profilePicture['error'] === UPLOAD_ERR_OK) {
-            $ext = pathinfo($profilePicture['name'], PATHINFO_EXTENSION);
-            $filename = uniqid('pf_') . '.' . $ext;
-            // path relative to public/index.php execution context can vary, so use absolute
-            $uploadDir = __DIR__ . '/../../public/uploads/';
+            $ext = strtolower(pathinfo($profilePicture['name'], PATHINFO_EXTENSION));
+            $uniqueName = uniqid('pf_') . '.' . $ext;
+            // Store avatars in /uploads/avatars/ for consistency with profile edit
+            $uploadDir = __DIR__ . '/../../public/uploads/avatars/';
             if (!file_exists($uploadDir)) {
                 mkdir($uploadDir, 0777, true);
             }
-            move_uploaded_file($profilePicture['tmp_name'], $uploadDir . $filename);
+            if (move_uploaded_file($profilePicture['tmp_name'], $uploadDir . $uniqueName)) {
+                // Store full web path for consistent display across the app
+                $filename = '/uploads/avatars/' . $uniqueName;
+            }
         }
 
         // Hash password

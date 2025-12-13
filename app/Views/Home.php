@@ -9,9 +9,8 @@
 </head>
 
 <body class="xp-bg">
-    <div>
-        <div class="logo" style="margin-left: 110px; margin-bottom: 25px;">SKAVOO</div>
-
+    <div style="display: flex; flex-direction: column; align-items: center;">
+        <div class="logo" style="margin-bottom: 25px;">SKAVOO</div>
         <div class="home-window">
             <div class="window-header">
                 <span class="window-title">Welcome to Skavoo</span>

@@ -304,3 +304,181 @@ $router->get('/messages/{user_uuid}', 'MessagesController@thread');
  * - Must be CSRF-protected.
  */
 $router->post('/messages/{user_uuid}', 'MessagesController@send');
+
+
+/**
+ * ---------------------------------------------------------------
+ * Friends Routes
+ * ---------------------------------------------------------------
+ */
+
+/**
+ * Display all friends.
+ *
+ * @method GET
+ * @route /friends
+ * @controller FriendsController@index
+ * @description Shows the user's friends list.
+ */
+$router->get('/friends', 'FriendsController@index');
+
+/**
+ * Display pending friend requests.
+ *
+ * @method GET
+ * @route /friends/requests
+ * @controller FriendsController@requests
+ * @description Shows incoming and outgoing friend requests.
+ */
+$router->get('/friends/requests', 'FriendsController@requests');
+
+/**
+ * Send a friend request.
+ *
+ * @method POST
+ * @route /friends/send
+ * @controller FriendsController@send
+ * @description Sends a friend request to another user.
+ */
+$router->post('/friends/send', 'FriendsController@send');
+
+/**
+ * Accept a friend request.
+ *
+ * @method POST
+ * @route /friends/accept
+ * @controller FriendsController@accept
+ * @description Accepts an incoming friend request.
+ */
+$router->post('/friends/accept', 'FriendsController@accept');
+
+/**
+ * Reject a friend request.
+ *
+ * @method POST
+ * @route /friends/reject
+ * @controller FriendsController@reject
+ * @description Declines an incoming friend request.
+ */
+$router->post('/friends/reject', 'FriendsController@reject');
+
+/**
+ * Cancel a sent friend request.
+ *
+ * @method POST
+ * @route /friends/cancel
+ * @controller FriendsController@cancel
+ * @description Cancels a pending friend request the user sent.
+ */
+$router->post('/friends/cancel', 'FriendsController@cancel');
+
+/**
+ * Remove a friend.
+ *
+ * @method POST
+ * @route /friends/remove
+ * @controller FriendsController@remove
+ * @description Unfriends a user.
+ */
+$router->post('/friends/remove', 'FriendsController@remove');
+
+
+/**
+ * ---------------------------------------------------------------
+ * Post Routes
+ * ---------------------------------------------------------------
+ */
+
+/**
+ * Create a new post.
+ *
+ * @method POST
+ * @route /posts/create
+ * @controller PostController@create
+ * @description Creates a new post with optional media.
+ */
+$router->post('/posts/create', 'PostController@create');
+
+/**
+ * Like or unlike a post.
+ *
+ * @method POST
+ * @route /posts/{id}/like
+ * @controller PostController@toggleLike
+ * @description Toggles like status on a post.
+ */
+$router->post('/posts/{id}/like', 'PostController@toggleLike');
+
+/**
+ * Add a comment to a post.
+ *
+ * @method POST
+ * @route /posts/{id}/comment
+ * @controller PostController@addComment
+ * @description Adds a comment to a post.
+ */
+$router->post('/posts/{id}/comment', 'PostController@addComment');
+
+/**
+ * Delete a post.
+ *
+ * @method POST
+ * @route /posts/{id}/delete
+ * @controller PostController@delete
+ * @description Deletes a user's own post.
+ */
+$router->post('/posts/{id}/delete', 'PostController@delete');
+
+/**
+ * Delete a comment.
+ *
+ * @method POST
+ * @route /comments/{id}/delete
+ * @controller PostController@deleteComment
+ * @description Deletes a user's own comment.
+ */
+$router->post('/comments/{id}/delete', 'PostController@deleteComment');
+
+
+/**
+ * ---------------------------------------------------------------
+ * Notification API Routes
+ * ---------------------------------------------------------------
+ */
+
+/**
+ * Get user notifications (JSON).
+ *
+ * @method GET
+ * @route /api/notifications
+ * @controller NotificationsController@getNotifications
+ */
+$router->get('/api/notifications', 'NotificationsController@getNotifications');
+
+/**
+ * Get unread notification count.
+ *
+ * @method GET
+ * @route /api/notifications/count
+ * @controller NotificationsController@getCount
+ */
+$router->get('/api/notifications/count', 'NotificationsController@getCount');
+
+/**
+ * Mark all notifications as read.
+ *
+ * @method POST
+ * @route /api/notifications/read
+ * @controller NotificationsController@markAllRead
+ */
+$router->post('/api/notifications/read', 'NotificationsController@markAllRead');
+
+/**
+ * Mark a single notification as read.
+ *
+ * @method POST
+ * @route /api/notifications/{id}/read
+ * @controller NotificationsController@markRead
+ */
+$router->post('/api/notifications/{id}/read', 'NotificationsController@markRead');
+
