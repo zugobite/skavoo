@@ -67,14 +67,16 @@
                                     <?php endif; ?>
                                 </div>
                                 <div class="friend-card-actions">
-                                    <a href="/messages/<?= \App\Helpers\e($friend['uuid']); ?>" class="btn-message" title="Message">
+                                    <a href="/messages/<?= \App\Helpers\e($friend['uuid']); ?>" class="btn" title="Message">
                                         💬
                                     </a>
                                     <form action="/friends/remove" method="POST" style="display:inline;" 
                                           onsubmit="return confirm('Are you sure you want to unfriend <?= \App\Helpers\e($friend['full_name']); ?>?');">
                                         <input type="hidden" name="csrf" value="<?= \App\Helpers\e($csrf); ?>">
                                         <input type="hidden" name="friend_id" value="<?= (int)$friend['id']; ?>">
-                                        <button type="submit" class="btn-unfriend" title="Unfriend">✕</button>
+                                        <button type="submit" class="btn" title="Unfriend" style="padding-top: 9px !important; padding-bottom: 9px !important;">
+                                            ❌
+                                        </button>
                                     </form>
                                 </div>
                             </div>

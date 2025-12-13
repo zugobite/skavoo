@@ -62,7 +62,7 @@
                             <form action="/friends/cancel" method="POST">
                                 <input type="hidden" name="csrf" value="<?= \App\Helpers\e($csrf); ?>">
                                 <input type="hidden" name="receiver_id" value="<?= $user['id'] ?>">
-                                <button type="submit" class="btn-secondary">Cancel Request</button>
+                                <button type="submit" class="btn">Cancel Request</button>
                             </form>
                         <?php else: ?>
                             <!-- They sent me a request - show Accept/Decline buttons -->
@@ -82,12 +82,11 @@
 
                     <?php elseif ($friendship['status'] === 'accepted'): ?>
                         <!-- Already friends - show Friends badge and Unfriend option -->
-                        <div class="friends-badge">✓ Friends</div>
                         <form action="/friends/remove" method="POST" style="margin-top:5px;"
                               onsubmit="return confirm('Are you sure you want to unfriend <?= \App\Helpers\e($user['full_name']); ?>?');">
                             <input type="hidden" name="csrf" value="<?= \App\Helpers\e($csrf); ?>">
                             <input type="hidden" name="friend_id" value="<?= $user['id'] ?>">
-                            <button type="submit" class="btn-unfriend-small">Unfriend</button>
+                            <button type="submit" class="btn">❌ Unfriend</button>
                         </form>
                     <?php endif; ?>
                 </section>
@@ -123,7 +122,14 @@
             $is_own_profile = $_SESSION['user_uuid'] === $user['uuid'];
             $first_name = explode(' ', htmlspecialchars($user['full_name']))[0];
 
-            $stmt = $pdo->prepare("SELECT u.full_name, u.uuid FROM friends f JOIN users u ON ((f.sender_id = :user_id AND f.receiver_id = u.id) OR (f.receiver_id = :user_id AND f.sender_id = u.id)) WHERE f.status = 'accepted'");
+            // Fetch friends with profile picture and friendship date
+            $stmt = $pdo->prepare(
+                "SELECT u.full_name, u.uuid, u.profile_picture, f.responded_at as became_friends_at
+                 FROM friends f 
+                 JOIN users u ON ((f.sender_id = :user_id AND f.receiver_id = u.id) OR (f.receiver_id = :user_id AND f.sender_id = u.id)) 
+                 WHERE f.status = 'accepted'
+                 ORDER BY became_friends_at DESC"
+            );
             $stmt->execute(['user_id' => $user['id']]);
             $friends = $stmt->fetchAll();
             ?>
@@ -131,9 +137,23 @@
             <div class="friends-list">
                 <h2>Friends</h2>
                 <?php if ($friends): ?>
-                    <ul>
+                    <ul class="friends-list-avatars">
                         <?php foreach ($friends as $friend): ?>
-                            <li><a href="/user/<?= htmlspecialchars($friend['uuid']) ?>"><?= htmlspecialchars($friend['full_name']) ?></a></li>
+                            <li class="friend-list-item">
+                                <a href="/user/profile/<?= htmlspecialchars($friend['uuid']) ?>">
+                                    <img src="<?= \App\Helpers\e(\App\Helpers\profilePicturePath($friend['profile_picture'] ?? null)); ?>" 
+                                         alt="<?= htmlspecialchars($friend['full_name']) ?>" 
+                                         class="friend-avatar">
+                                </a>
+                                <div class="friend-info">
+                                    <a href="/user/profile/<?= htmlspecialchars($friend['uuid']) ?>" class="friend-name">
+                                        <?= htmlspecialchars($friend['full_name']) ?>
+                                    </a>
+                                    <div class="friend-date">
+                                        <small>Became friends: <?= date('M d, Y', strtotime($friend['became_friends_at'])) ?></small>
+                                    </div>
+                                </div>
+                            </li>
                         <?php endforeach; ?>
                     </ul>
                 <?php else: ?>
@@ -193,24 +213,46 @@
 
                 if ($is_own_profile) {
                     $visibility_condition = "visibility IN ('public', 'friends', 'private')";
-                    $query = "SELECT posts.*, users.full_name, users.uuid, users.profile_picture FROM posts JOIN users ON users.id = posts.user_id WHERE posts.user_id = :owner AND $visibility_condition ORDER BY posts.created_at DESC";
+                    $query = "SELECT posts.*, users.full_name, users.uuid, users.profile_picture,
+                        (SELECT COUNT(*) FROM likes WHERE likes.post_id = posts.id) as like_count,
+                        (SELECT COUNT(*) FROM comments WHERE comments.post_id = posts.id) as comment_count,
+                        (SELECT COUNT(*) FROM likes WHERE likes.post_id = posts.id AND likes.user_id = :viewer_id) as user_liked
+                        FROM posts
+                        JOIN users ON users.id = posts.user_id
+                        WHERE posts.user_id = :owner AND $visibility_condition
+                        ORDER BY posts.created_at DESC";
                     $stmt = $pdo->prepare($query);
-                    $stmt->execute([':owner' => $owner_id]);
+                    $stmt->execute([':owner' => $owner_id, ':viewer_id' => $viewer_id]);
                 } else {
                     $visibility_condition = "(visibility = 'public' OR (visibility = 'friends' AND EXISTS (SELECT 1 FROM friends WHERE status = 'accepted' AND ((sender_id = :viewer AND receiver_id = :owner) OR (sender_id = :owner AND receiver_id = :viewer)))))";
-                    $query = "SELECT posts.*, users.full_name, users.uuid, users.profile_picture FROM posts JOIN users ON users.id = posts.user_id WHERE posts.user_id = :owner AND $visibility_condition ORDER BY posts.created_at DESC";
+                    $query = "SELECT posts.*, users.full_name, users.uuid, users.profile_picture,
+                        (SELECT COUNT(*) FROM likes WHERE likes.post_id = posts.id) as like_count,
+                        (SELECT COUNT(*) FROM comments WHERE comments.post_id = posts.id) as comment_count,
+                        (SELECT COUNT(*) FROM likes WHERE likes.post_id = posts.id AND likes.user_id = :viewer_id) as user_liked
+                        FROM posts
+                        JOIN users ON users.id = posts.user_id
+                        WHERE posts.user_id = :owner AND $visibility_condition
+                        ORDER BY posts.created_at DESC";
                     $stmt = $pdo->prepare($query);
-                    $stmt->execute([':owner' => $owner_id, ':viewer' => $viewer_id]);
+                    $stmt->execute([':owner' => $owner_id, ':viewer' => $viewer_id, ':viewer_id' => $viewer_id]);
                 }
 
                 $posts = $stmt->fetchAll();
+
+                // Fetch up to 3 most recent comments for each post (like Feed.php)
+                foreach ($posts as &$post) {
+                    $commentStmt = $pdo->prepare("SELECT comments.*, users.full_name, users.uuid, users.profile_picture FROM comments JOIN users ON comments.user_id = users.id WHERE comments.post_id = :post_id ORDER BY comments.created_at DESC LIMIT 3");
+                    $commentStmt->execute(['post_id' => $post['id']]);
+                    $post['comments'] = array_reverse($commentStmt->fetchAll(PDO::FETCH_ASSOC));
+                }
+                unset($post);
                 ?>
 
                 <section id="user-posts">
                     <h2>Posts</h2>
                     <?php if ($posts): ?>
                         <?php foreach ($posts as $post): ?>
-                            <div class="post">
+                            <div class="card">
                                 <div class="post-header-layout">
                                     <div class="post-user-info">
                                         <img src="<?= \App\Helpers\e(\App\Helpers\profilePicturePath($post['profile_picture'] ?? null)); ?>" alt="Profile" class="post-avatar">
@@ -219,9 +261,18 @@
                                             <small class="post-date"><?= date('Y-m-d H:i', strtotime($post['created_at'])) ?></small>
                                         </div>
                                     </div>
-                                    <div class="post-options">
-                                        <span title="More options">&#8942;</span>
-                                    </div>
+                                    <?php if ((int)$post['user_id'] === (int)$_SESSION['user_id']): ?>
+                                        <div class="post-options dropdown">
+                                            <button class="btn btn-sm" onclick="toggleDropdown(this)">⋮</button>
+                                            <div class="dropdown-menu">
+                                                <form action="/posts/<?= (int)$post['id']; ?>/delete" method="POST"
+                                                      onsubmit="return confirm('Are you sure you want to delete this post?');">
+                                                    <input type="hidden" name="csrf" value="<?= \App\Helpers\e($csrf); ?>">
+                                                    <button type="submit" class="dropdown-item text-danger">🗑 Delete Post</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    <?php endif; ?>
                                 </div>
 
                                 <hr class="post-divider">
@@ -240,6 +291,77 @@
                                             </video>
                                         <?php endif; ?>
                                     <?php endif; ?>
+                                </div>
+
+                                <!-- Post Stats -->
+                                <div class="post-stats">
+                                    <?php if (isset($post['like_count']) && (int)$post['like_count'] > 0): ?>
+                                        <span class="stat-item">❤️ <?= (int)$post['like_count']; ?></span>
+                                    <?php endif; ?>
+                                    <?php if (isset($post['comment_count']) && (int)$post['comment_count'] > 0): ?>
+                                        <span class="stat-item"><?= (int)$post['comment_count']; ?> comment<?= (int)$post['comment_count'] !== 1 ? 's' : ''; ?></span>
+                                    <?php endif; ?>
+                                </div>
+
+                                <!-- Post Actions (Feed style) -->
+                                <div class="post-actions">
+                                    <form action="/posts/<?= (int)$post['id']; ?>/like" method="POST" class="like-form">
+                                        <input type="hidden" name="csrf" value="<?= \App\Helpers\e($csrf); ?>">
+                                        <button type="submit" class="btn<?= isset($post['user_liked']) && (int)$post['user_liked'] ? ' liked' : '' ?>">
+                                            <?= isset($post['user_liked']) && (int)$post['user_liked'] ? '❤️' : '🤍'; ?> Like
+                                        </button>
+                                    </form>
+                                    <button type="button" class="btn" onclick="toggleComments(<?= (int)$post['id']; ?>)">💬 Comment</button>
+                                    <button type="button" class="btn" onclick="sharePost(<?= (int)$post['id']; ?>)">🔗 Share</button>
+                                </div>
+
+                                <!-- Comments Section -->
+                                <div class="comments-section" id="comments-<?= (int)$post['id']; ?>" style="display:none;">
+                                    <hr class="comment-divider">
+                                    <!-- Existing Comments -->
+                                    <?php if (!empty($post['comments'])): ?>
+                                        <div class="comments-list">
+                                            <?php foreach ($post['comments'] as $comment): ?>
+                                                <div class="comment-item">
+                                                    <a href="/user/profile/<?= \App\Helpers\e($comment['uuid']); ?>">
+                                                        <img src="<?= \App\Helpers\e(\App\Helpers\profilePicturePath($comment['profile_picture'] ?? null)); ?>" 
+                                                             alt="<?= \App\Helpers\e($comment['full_name']); ?>" 
+                                                             class="comment-avatar">
+                                                    </a>
+                                                    <div class="comment-content">
+                                                        <div class="comment-bubble">
+                                                            <a href="/user/profile/<?= \App\Helpers\e($comment['uuid']); ?>" class="comment-author">
+                                                                <?= \App\Helpers\e($comment['full_name']); ?>
+                                                            </a>
+                                                            <p class="comment-text"><?= nl2br(\App\Helpers\e($comment['comment'])); ?></p>
+                                                        </div>
+                                                        <div class="comment-meta">
+                                                            <span class="comment-time"><?= \App\Helpers\e(timeAgo($comment['created_at'])); ?></span>
+                                                            <?php if ((int)$comment['user_id'] === (int)$_SESSION['user_id']): ?>
+                                                                <form action="/comments/<?= (int)$comment['id']; ?>/delete" method="POST" style="display:inline;">
+                                                                    <input type="hidden" name="csrf" value="<?= \App\Helpers\e($csrf); ?>">
+                                                                    <button type="submit" class="btn">Delete</button>
+                                                                </form>
+                                                            <?php endif; ?>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            <?php endforeach; ?>
+                                        </div>
+                                        <?php if ((int)$post['comment_count'] > 3): ?>
+                                            <a href="#" class="view-all-comments">View all <?= (int)$post['comment_count']; ?> comments</a>
+                                        <?php endif; ?>
+                                    <?php endif; ?>
+
+                                    <!-- Add Comment Form -->
+                                    <form action="/posts/<?= (int)$post['id']; ?>/comment" method="POST" class="comment-form">
+                                        <input type="hidden" name="csrf" value="<?= \App\Helpers\e($csrf); ?>">
+                                        <img src="<?= \App\Helpers\e(\App\Helpers\profilePicturePath($_SESSION['profile_picture'] ?? null)); ?>" 
+                                             alt="Your avatar" class="comment-avatar">
+                                        <input type="text" name="comment" placeholder="Write a comment..." 
+                                               required maxlength="1000">
+                                        <button type="submit" class="btn">Post</button>
+                                    </form>
                                 </div>
                             </div>
                         <?php endforeach; ?>
