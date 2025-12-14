@@ -1,3 +1,73 @@
+/* =====================================================
+   PROFILE EDIT FORM LAYOUT
+   ===================================================== */
+.edit-profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  width: 100%;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: 12px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5px;
+  margin-bottom: 10px;
+}
+
+.form-group label {
+  font-weight: 500;
+  margin-bottom: 2px;
+  color: var(--text-primary);
+}
+
+.form-control {
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  border: 2px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: 8px 12px;
+  background-color: var(--bg-input);
+  color: var(--text-primary);
+  width: 100%;
+  box-shadow: none;
+  transition: border-color 0.2s;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.form-group .help {
+  color: var(--text-secondary);
+  font-size: var(--font-size-xs);
+  margin-top: 2px;
+}
+
+.form-group .error {
+  color: var(--color-danger);
+  font-size: var(--font-size-xs);
+  margin-top: 2px;
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 10px !important;
+  align-items: center;
+}
+
+.actions .btn {
+  min-width: 120px;
+}
 /* Friends List Avatars Enhanced */
 .friends-list-avatars {
   list-style: none;
@@ -1599,7 +1669,12 @@ header {
   flex-direction: column;
   gap: 10px;
 }
-
+.edit-profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
 /* Navigation Tabs */
 .nav-tabs {
   background-color: var(--bg-cream);

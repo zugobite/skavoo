@@ -124,16 +124,19 @@
                     <?php endif; ?>
 
                     <form id="edit-profile-form"
+                        class="edit-profile-form"
                         action="/user/profile/<?= \App\Helpers\e($user['uuid']); ?>/edit"
                         method="post"
                         enctype="multipart/form-data"
                         novalidate>
                         <input type="hidden" name="csrf" value="<?= \App\Helpers\e($csrf); ?>">
 
+
                         <div class="form-group">
+                            <label for="full_name">Full Name</label>
                             <input class="form-control" type="text" id="full_name" name="full_name"
                                 value="<?= \App\Helpers\e($user['full_name']); ?>" maxlength="120"
-                                placeholder="Full Name" required>
+                                required>
                             <span class="help">Required. 120 characters max.</span>
                             <?php if (!empty($errors['full_name'])): ?>
                                 <div class="error"><?= \App\Helpers\e($errors['full_name']); ?></div>
@@ -141,7 +144,8 @@
                         </div>
 
                         <div class="form-group">
-                            <textarea class="form-control" id="bio" name="bio" maxlength="1000" placeholder="Bio (about you)"><?= \App\Helpers\e($user['bio'] ?? ''); ?></textarea>
+                            <label for="bio">Bio</label>
+                            <textarea class="form-control" id="bio" name="bio" maxlength="1000" placeholder="About you..."><?= \App\Helpers\e($user['bio'] ?? ''); ?></textarea>
                             <span class="help">Tell people about yourself. 1000 characters max.</span>
                             <?php if (!empty($errors['bio'])): ?>
                                 <div class="error"><?= \App\Helpers\e($errors['bio']); ?></div>
@@ -171,7 +175,8 @@
                         </div>
 
                         <div class="form-group">
-                            <input class="form-control" type="text" id="location" name="location" maxlength="100" placeholder="Location (City, Country)" value="<?= \App\Helpers\e($user['location'] ?? ''); ?>">
+                            <label for="location">Location</label>
+                            <input class="form-control" type="text" id="location" name="location" maxlength="100" placeholder="City, Country" value="<?= \App\Helpers\e($user['location'] ?? ''); ?>">
                             <?php if (!empty($errors['location'])): ?>
                                 <div class="error"><?= \App\Helpers\e($errors['location']); ?></div>
                             <?php endif; ?>
@@ -192,27 +197,31 @@
                         </div>
 
                         <div class="form-group">
-                            <input class="form-control" type="text" id="work" name="work" maxlength="100" placeholder="Work (Job/Company)" value="<?= \App\Helpers\e($user['work'] ?? ''); ?>">
+                            <label for="work">Work</label>
+                            <input class="form-control" type="text" id="work" name="work" maxlength="100" placeholder="Job/Company" value="<?= \App\Helpers\e($user['work'] ?? ''); ?>">
                             <?php if (!empty($errors['work'])): ?>
                                 <div class="error"><?= \App\Helpers\e($errors['work']); ?></div>
                             <?php endif; ?>
                         </div>
 
                         <div class="form-group">
-                            <input class="form-control" type="text" id="education" name="education" maxlength="100" placeholder="Education (School/University)" value="<?= \App\Helpers\e($user['education'] ?? ''); ?>">
+                            <label for="education">Education</label>
+                            <input class="form-control" type="text" id="education" name="education" maxlength="100" placeholder="School/University" value="<?= \App\Helpers\e($user['education'] ?? ''); ?>">
                             <?php if (!empty($errors['education'])): ?>
                                 <div class="error"><?= \App\Helpers\e($errors['education']); ?></div>
                             <?php endif; ?>
                         </div>
 
                         <div class="form-group">
-                            <input class="form-control" type="url" id="website" name="website" maxlength="100" placeholder="Website (https://...)" value="<?= \App\Helpers\e($user['website'] ?? ''); ?>">
+                            <label for="website">Website</label>
+                            <input class="form-control" type="url" id="website" name="website" maxlength="100" placeholder="https://..." value="<?= \App\Helpers\e($user['website'] ?? ''); ?>">
                             <?php if (!empty($errors['website'])): ?>
                                 <div class="error"><?= \App\Helpers\e($errors['website']); ?></div>
                             <?php endif; ?>
                         </div>
 
                         <div class="form-group">
+                            <label for="phone">Phone</label>
                             <input class="form-control" type="text" id="phone" name="phone" maxlength="30" placeholder="Phone" value="<?= \App\Helpers\e($user['phone'] ?? ''); ?>">
                             <?php if (!empty($errors['phone'])): ?>
                                 <div class="error"><?= \App\Helpers\e($errors['phone']); ?></div>
