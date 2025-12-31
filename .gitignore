@@ -1,0 +1,54 @@
+# ===========================================
+# Skavoo .gitignore
+# ===========================================
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# IDE and Editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Dependencies
+/vendor/
+node_modules/
+
+# Logs
+*.log
+logs/
+
+# Cache
+/cache/
+*.cache
+
+# Uploads (user-generated content)
+public/uploads/avatars/*
+public/uploads/posts/*
+!public/uploads/avatars/.gitkeep
+!public/uploads/posts/.gitkeep
+
+# Build artifacts
+/build/
+/dist/
+
+# Testing
+/coverage/
+.phpunit.result.cache
+
+# Composer
+composer.lock
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db

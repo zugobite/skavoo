@@ -2,54 +2,152 @@
 
 All notable changes to this project will be documented in this file.
 
-This project uses **Semantic Versioning**:  
-`MAJOR.MINOR.PATCH`  
-See [semver.org](https://semver.org) for more details.
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
-## Version Control Table
-
-| Version | Description                               | Author      | Date       |
-| ------- | ----------------------------------------- | ----------- | ---------- |
-| 0.1.1   | Added .env support and improved DB config | Zascia Hugo | 2025-08-02 |
-| 0.1.0   | Initial boilerplate and core setup        | Zascia Hugo | 2025-08-02 |
-
----
-
-## **[0.1.1] - 2025-08-02**
+## [Unreleased]
 
 ### Added
 
-- `.env` file for secure environment variable configuration
-- `Helpers/env.php` to load variables from .env
-- Updated `config/database.php` to use `getenv()` for credentials
-- PHPDoc comments for both env loader and database connection
+- Nothing yet
 
 ### Changed
 
-- Moved hardcoded DB credentials out of `database.php` for better security
+- Nothing yet
 
-### Notes
+### Fixed
 
-- This refactor improves maintainability and security by isolating credentials
+- Nothing yet
 
 ---
 
-## **[0.1.0] - 2025-08-02**
+## [1.0.0] - 2026-01-01
 
 ### Added
 
-- `public/index.php` as the front controller for routing all HTTP requests
-- `Router` class to handle GET and POST routes and dispatch controller methods
-- `routes/web.php` with initial route definition for `/login`
-- `AuthController` with `loginPage()` and `login()` stubs
-- `app/Views/auth/login.php` with HTML login form
-- `config/database.php` with PDO-based MySQL connection
-- `README.md` with setup instructions tailored for MacBook users
-- `LICENSE.txt` restricting use and reproduction by Richfield Graduate Institute of Technology
-- `CHANGELOG.md` formatted with semantic versioning
+#### Authentication System
 
-### Notes
+- User registration with full name, email, password, and optional avatar
+- Secure login with email and password
+- Password hashing using `password_hash()` with `PASSWORD_DEFAULT`
+- Forgot password functionality with email-based reset tokens
+- Password reset with secure token validation
+- Session-based authentication using `$_SESSION`
+- Logout functionality with session destruction
 
-- Project is still in development; this is the initial stable boilerplate foundation
+#### User Profiles
+
+- View user profiles with avatar, name, and post history
+- Edit profile functionality (display name and avatar)
+- Public profile viewing for other users
+- Avatar upload with image validation
+
+#### Social Feed
+
+- Personalized feed showing posts from friends
+- Create posts with text and optional image attachments
+- Delete own posts
+- Chronological post ordering (newest first)
+- Post timestamps with relative time display
+
+#### Social Interactions
+
+- Like/unlike posts with toggle functionality
+- Comment on posts
+- Delete own comments
+- Real-time like and comment counts
+
+#### Friend System
+
+- Send friend requests to other users
+- Accept or reject incoming friend requests
+- Cancel outgoing friend requests
+- Remove existing friends
+- View friends list
+- View pending friend requests
+
+#### Private Messaging
+
+- One-to-one private messaging
+- Conversation threads grouped by user
+- Message inbox with conversation previews
+- Real-time message sending
+- Message timestamps
+
+#### Notifications
+
+- Notification system for social interactions
+- Mark notifications as read
+- Notification API endpoints
+
+#### Search
+
+- User search by name or email
+- Live search with JavaScript
+
+#### Security Features
+
+- SQL injection prevention via PDO prepared statements
+- CSRF token protection on all forms
+- Input validation and sanitization
+- XSS prevention through output escaping
+- Secure file upload handling
+- Authentication middleware for protected routes
+
+#### Developer Experience
+
+- Custom MVC-style architecture
+- Clean routing system with GET/POST support
+- Environment-based configuration via `.env`
+- PHPDoc comments throughout codebase
+- Organized folder structure
+
+### Changed
+
+- Project restructured for open-source release
+- Documentation updated for portfolio presentation
+- License changed to MIT for open-source compatibility
+
+### Removed
+
+- All academic/institutional references
+- Restrictive academic license
+
+---
+
+## [0.1.1] - 2025-08-02
+
+### Added
+
+- `.env` file support for secure environment configuration
+- `Helpers/env.php` to load environment variables
+- PHPDoc comments for env loader and database connection
+
+### Changed
+
+- Updated `config/database.php` to use `getenv()` for credentials
+- Moved hardcoded DB credentials out of source code
+
+---
+
+## [0.1.0] - 2025-08-02
+
+### Added
+
+- Initial project structure and boilerplate
+- `public/index.php` as front controller
+- Custom `Router` class for request handling
+- `routes/web.php` with initial route definitions
+- `AuthController` with login stubs
+- `app/Views/auth/login.php` with HTML form
+- `config/database.php` with PDO MySQL connection
+- Initial documentation files
+
+---
+
+[Unreleased]: https://github.com/zugobite/skavoo/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/zugobite/skavoo/compare/v0.1.1...v1.0.0
+[0.1.1]: https://github.com/zugobite/skavoo/compare/v0.1.0...v0.1.1
+[0.1.0]: https://github.com/zugobite/skavoo/releases/tag/v0.1.0

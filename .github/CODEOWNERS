@@ -1,0 +1,38 @@
+# ===========================================
+
+# Skavoo Code Owners
+
+# ===========================================
+
+# These owners will be the default owners for everything in the repo.
+
+# They will be requested for review when someone opens a pull request.
+
+# Global owners (for all files)
+
+- @zugobite
+
+# Core application logic
+
+/app/ @zugobite
+
+# Configuration files
+
+/config/ @zugobite
+
+# Database migrations and schema
+
+/database/ @zugobite
+
+# Public assets and entry point
+
+/public/ @zugobite
+
+# Routing
+
+/routes/ @zugobite
+
+# Documentation
+
+\*.md @zugobite
+/docs/ @zugobite
