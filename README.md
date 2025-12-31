@@ -1,79 +1,38 @@
-<div align="center">
+# Skavoo
 
-# �� Skavoo
+A modern, full-featured social media platform built from scratch with vanilla PHP, demonstrating MVC architecture, secure authentication, and complete social networking capabilities.
 
-**A modern social media platform built from scratch with vanilla PHP**
+[![PHP](https://img.shields.io/badge/PHP-8.0+-777BB4.svg)](https://php.net)
+[![MySQL](https://img.shields.io/badge/MySQL-5.7+-4479A1.svg)](https://mysql.com)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-[![PHP](https://img.shields.io/badge/PHP-8.0+-777BB4?style=for-the-badge&logo=php&logoColor=white)](https://php.net)
-[![MySQL](https://img.shields.io/badge/MySQL-5.7+-4479A1?style=for-the-badge&logo=mysql&logoColor=white)](https://mysql.com)
-[![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen?style=for-the-badge)](CONTRIBUTING.md)
+## Features
 
-[Features](#-features) •
-[Quick Start](#-quick-start) •
-[Documentation](#-documentation) •
-[Contributing](#-contributing) •
-[License](#-license)
+- **User Authentication** - Complete auth flow with secure password hashing and session management
+- **CSRF Protection** - Token-based protection on all forms
+- **SQL Injection Prevention** - PDO prepared statements throughout
+- **Social Posts** - Create, like, and comment on posts with image uploads
+- **Friend System** - Send, accept, and manage friend requests
+- **Private Messaging** - One-to-one direct messaging with conversation threads
+- **User Profiles** - Customizable profiles with avatars and post history
+- **Real-time Notifications** - Activity notifications with mark-as-read functionality
+- **Password Recovery** - Email-based password reset with secure tokens
+- **User Search** - Find and connect with other users
 
-</div>
+## Table of Contents
 
----
+- [Quick Start](#quick-start)
+- [Routes & Endpoints](#routes--endpoints)
+- [Usage Examples](#usage-examples)
+- [Project Structure](#project-structure)
+- [Database Schema](#database-schema)
+- [Environment Variables](#environment-variables)
+- [Development](#development)
+- [Contributing](#contributing)
+- [Disclaimer](#disclaimer)
+- [License](#license)
 
-## 📋 Overview
-
-**Skavoo** is a full-featured social media platform demonstrating modern web development practices using vanilla PHP. Built without frameworks to showcase core programming fundamentals, it implements the complete social networking experience: user authentication, profiles, posts, messaging, friends, and real-time notifications.
-
-> **⚠️ Disclaimer:** This project is designed for educational and portfolio purposes. It demonstrates PHP development patterns similar to Laravel's architecture but implemented from scratch.
-
-### Why Skavoo?
-
-- 🎯 **Framework-Free** – Pure PHP showcasing MVC architecture without dependencies
-- 🔒 **Security-First** – PDO prepared statements, CSRF protection, password hashing
-- 📱 **Full-Featured** – Complete social platform with all core features
-- 🧩 **Extensible** – Clean codebase designed for easy modifications
-- 📚 **Educational** – Well-documented code with PHPDoc comments
-
----
-
-## ✨ Features
-
-### Authentication & Security
-- ✅ User registration with email validation
-- ✅ Secure login with password hashing (`password_hash`)
-- ✅ Password reset via email tokens
-- ✅ Session-based authentication
-- ✅ CSRF protection on all forms
-- ✅ SQL injection prevention (PDO prepared statements)
-
-### Social Features
-- ✅ Create posts with text and images
-- ✅ Like and comment on posts
-- ✅ Personalized feed from friends
-- ✅ User search functionality
-
-### User Profiles
-- ✅ Customizable profiles with avatars
-- ✅ Edit display name and profile picture
-- ✅ View other users' public profiles
-- ✅ Post history on profiles
-
-### Friend System
-- ✅ Send/accept/reject friend requests
-- ✅ View friends list
-- ✅ Remove friends
-
-### Private Messaging
-- ✅ One-to-one direct messaging
-- ✅ Conversation threads
-- ✅ Message inbox
-
-### Notifications
-- ✅ Real-time notification system
-- ✅ Mark as read functionality
-
----
-
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 
@@ -83,165 +42,294 @@
 
 ### Installation
 
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/zugobite/skavoo.git
-   cd skavoo
-   ```
+```bash
+# Clone the repository
+git clone https://github.com/zugobite/skavoo.git
+cd skavoo
 
-2. **Create environment file:**
-   ```bash
-   cp .env.example .env
-   ```
+# Copy environment template
+cp .env.example .env
+# Edit .env with your database configuration
 
-3. **Configure your database credentials in `.env`:**
-   ```env
-   DB_HOST=localhost
-   DB_NAME=social_db
-   DB_USER=root
-   DB_PASS=your_password
-   ```
+# Create database and run migrations
+mysql -u root -p -e "CREATE DATABASE social_db;"
+mysql -u root -p social_db < database/migrations/create_tables.sql
 
-4. **Create the database and run migrations:**
-   ```bash
-   mysql -u root -p -e "CREATE DATABASE social_db;"
-   mysql -u root -p social_db < database/migrations/create_tables.sql
-   ```
+# (Optional) Seed the database with sample data
+php database/seeder.php
 
-5. **Start the development server:**
-   ```bash
-   cd public
-   php -S localhost:8000
-   ```
+# Start the development server
+cd public
+php -S localhost:8000
+```
 
-6. **Visit the application:**
-   ```
-   http://localhost:8000
-   ```
+The application will be available at `http://localhost:8000`.
 
----
+## Routes & Endpoints
 
-## 📁 Project Structure
+### Public Routes
+
+| Method | Route              | Description            |
+| ------ | ------------------ | ---------------------- |
+| `GET`  | `/`                | Home page              |
+| `GET`  | `/login`           | Login page             |
+| `POST` | `/login`           | Process login          |
+| `GET`  | `/register`        | Registration page      |
+| `POST` | `/register`        | Process registration   |
+| `GET`  | `/forgot-password` | Forgot password page   |
+| `POST` | `/forgot-password` | Send reset email       |
+| `GET`  | `/reset-password`  | Reset password page    |
+| `POST` | `/reset-password`  | Process password reset |
+
+### Protected Routes (Requires Authentication)
+
+| Method | Route     | Description                |
+| ------ | --------- | -------------------------- |
+| `GET`  | `/feed`   | User feed (friends' posts) |
+| `POST` | `/logout` | Log out user               |
+
+### Post Routes
+
+| Method | Route                 | Description         |
+| ------ | --------------------- | ------------------- |
+| `POST` | `/posts`              | Create new post     |
+| `POST` | `/posts/{id}/like`    | Like a post         |
+| `POST` | `/posts/{id}/unlike`  | Unlike a post       |
+| `POST` | `/posts/{id}/comment` | Add comment to post |
+| `POST` | `/posts/{id}/delete`  | Delete a post       |
+
+### User & Profile Routes
+
+| Method | Route           | Description       |
+| ------ | --------------- | ----------------- |
+| `GET`  | `/user/{id}`    | View user profile |
+| `GET`  | `/profile/edit` | Edit profile page |
+| `POST` | `/profile/edit` | Update profile    |
+| `GET`  | `/search`       | Search users      |
+
+### Friend Routes
+
+| Method | Route                  | Description             |
+| ------ | ---------------------- | ----------------------- |
+| `GET`  | `/friends`             | Friends list            |
+| `GET`  | `/friends/requests`    | Pending friend requests |
+| `POST` | `/friends/add/{id}`    | Send friend request     |
+| `POST` | `/friends/accept/{id}` | Accept friend request   |
+| `POST` | `/friends/reject/{id}` | Reject friend request   |
+| `POST` | `/friends/remove/{id}` | Remove friend           |
+
+### Message Routes
+
+| Method | Route            | Description         |
+| ------ | ---------------- | ------------------- |
+| `GET`  | `/messages`      | Message inbox       |
+| `GET`  | `/messages/{id}` | Conversation thread |
+| `POST` | `/messages/{id}` | Send message        |
+
+### Notification Routes
+
+| Method | Route                      | Description        |
+| ------ | -------------------------- | ------------------ |
+| `GET`  | `/notifications`           | View notifications |
+| `POST` | `/notifications/{id}/read` | Mark as read       |
+| `POST` | `/notifications/read-all`  | Mark all as read   |
+
+## Usage Examples
+
+### Complete User Flow
+
+```bash
+# 1. Register a new account
+# Navigate to http://localhost:8000/register
+# Fill in: username, email, password
+
+# 2. Login
+# Navigate to http://localhost:8000/login
+# Enter your credentials
+
+# 3. Create a post
+# On the feed page, use the post form
+# Add text and optionally upload an image
+
+# 4. Search for users
+# Use the search bar to find other users
+# Send friend requests to connect
+
+# 5. Send a message
+# Navigate to a user's profile
+# Click "Message" to start a conversation
+```
+
+### Database Seeding
+
+```bash
+# Populate the database with sample users and content
+php database/seeder.php
+```
+
+## Project Structure
 
 ```
 skavoo/
 ├── app/
-│   ├── Controllers/         # Request handlers (Auth, Post, User, etc.)
-│   ├── Core/                # Router and core framework classes
-│   ├── Helpers/             # Utility functions (DB, CSRF, Mail, etc.)
-│   ├── Middleware/          # Authentication middleware
-│   ├── Support/             # Global helpers and namespace aliases
-│   └── Views/               # PHP template files
-│       ├── Auth/            # Login, register, password reset
-│       ├── Components/      # Reusable UI components
-│       ├── Emails/          # Email templates
-│       ├── Friends/         # Friends list and requests
-│       ├── Messages/        # Inbox and conversation threads
-│       └── User/            # Profile and edit profile
+│   ├── Controllers/                    # Request handlers
+│   │   ├── AuthController.php
+│   │   ├── FeedController.php
+│   │   ├── FriendsController.php
+│   │   ├── HomeController.php
+│   │   ├── MessagesController.php
+│   │   ├── NotificationsController.php
+│   │   ├── PostController.php
+│   │   ├── SearchController.php
+│   │   └── UserController.php
+│   ├── Core/                           # Framework core
+│   │   └── Router.php
+│   ├── Helpers/                        # Utility classes
+│   │   ├── Csrf.php
+│   │   ├── DB.php
+│   │   ├── env.php
+│   │   ├── Functions.php
+│   │   └── Mail.php
+│   ├── Middleware/                     # Request middleware
+│   │   └── AuthMiddleware.php
+│   ├── Support/                        # Bootstrap files
+│   │   ├── global_helpers.php
+│   │   └── namespace_aliases.php
+│   └── Views/                          # PHP templates
+│       ├── Auth/                       # Authentication views
+│       ├── Components/                 # Reusable components
+│       ├── Emails/                     # Email templates
+│       ├── Friends/                    # Friend management views
+│       ├── Messages/                   # Messaging views
+│       └── User/                       # Profile views
 ├── config/
-│   └── database.php         # Database configuration
+│   └── database.php                    # Database configuration
 ├── database/
-│   ├── migrations/          # SQL schema files
-│   └── seeder.php           # Database seeder
+│   ├── migrations/                     # SQL schema files
+│   │   └── create_tables.sql
+│   ├── seeder.php                      # Database seeder
+│   └── ERD.md                          # Entity relationship docs
 ├── public/
-│   ├── index.php            # Front controller (entry point)
-│   ├── css/                 # Stylesheets
-│   ├── js/                  # JavaScript files
-│   └── uploads/             # User-uploaded files
+│   ├── index.php                       # Application entry point
+│   ├── css/                            # Stylesheets
+│   ├── js/                             # JavaScript files
+│   └── uploads/                        # User uploads
+│       ├── avatars/
+│       └── posts/
 ├── routes/
-│   └── web.php              # Route definitions
-├── .env.example             # Environment template
-├── .gitignore               # Git ignore rules
-├── CHANGELOG.md             # Version history
-├── CONTRIBUTING.md          # Contribution guidelines
-├── LICENSE                  # MIT License
-└── README.md                # This file
+│   └── web.php                         # Route definitions
+├── .env.example                        # Environment template
+├── CHANGELOG.md                        # Version history
+├── CONTRIBUTING.md                     # Contribution guidelines
+├── LICENSE                             # MIT License
+└── README.md
 ```
 
----
+## Database Schema
 
-## 📖 Documentation
+The application uses the following database tables:
 
-### Environment Variables
-
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `DB_HOST` | Database host | `localhost` |
-| `DB_NAME` | Database name | `social_db` |
-| `DB_USER` | Database username | `root` |
-| `DB_PASS` | Database password | - |
-| `APP_ENV` | Environment mode | `development` |
-| `APP_DEBUG` | Debug mode | `true` |
-
-### Database Schema
-
-The application uses the following main tables:
-
-- `users` – User accounts and profiles
-- `posts` – User posts with optional media
-- `likes` – Post likes
-- `comments` – Post comments
-- `friends` – Friend relationships and requests
-- `messages` – Private messages
-- `notifications` – User notifications
-- `password_resets` – Password reset tokens
+| Table             | Description                         |
+| ----------------- | ----------------------------------- |
+| `users`           | User accounts and profile data      |
+| `posts`           | User posts with optional media      |
+| `likes`           | Post likes (user-post relationship) |
+| `comments`        | Comments on posts                   |
+| `friends`         | Friend relationships and requests   |
+| `messages`        | Private messages between users      |
+| `notifications`   | User activity notifications         |
+| `password_resets` | Password reset tokens               |
 
 For the complete schema, see [database/migrations/create_tables.sql](database/migrations/create_tables.sql).
 
-### Routes
+For entity relationships, see [database/ERD.md](database/ERD.md).
 
-All routes are defined in [routes/web.php](routes/web.php). The application uses a custom router supporting:
+## Environment Variables
 
-- GET and POST methods
-- Dynamic route parameters (`/user/{id}`)
-- Middleware for protected routes
+| Variable    | Description       | Required |
+| ----------- | ----------------- | -------- |
+| `DB_HOST`   | Database host     | Yes      |
+| `DB_NAME`   | Database name     | Yes      |
+| `DB_USER`   | Database username | Yes      |
+| `DB_PASS`   | Database password | Yes      |
+| `APP_ENV`   | Environment mode  | No       |
+| `APP_DEBUG` | Enable debug mode | No       |
+| `MAIL_HOST` | SMTP server host  | No       |
+| `MAIL_PORT` | SMTP server port  | No       |
+| `MAIL_USER` | SMTP username     | No       |
+| `MAIL_PASS` | SMTP password     | No       |
 
----
+See [.env.example](.env.example) for a complete template.
 
-## 🤝 Contributing
+## Development
 
-Contributions are welcome! Please read our [Contributing Guidelines](CONTRIBUTING.md) before submitting a pull request.
+```bash
+# Start development server
+cd public && php -S localhost:8000
+
+# Run migrations
+mysql -u root -p social_db < database/migrations/create_tables.sql
+
+# Seed database
+php database/seeder.php
+```
+
+### Architecture
+
+This project follows an MVC (Model-View-Controller) architecture:
+
+- **Controllers** handle incoming requests and return responses
+- **Views** are PHP templates that render the HTML
+- **Helpers** provide database access and utility functions
+- **Middleware** handles authentication and request preprocessing
+- **Router** maps URLs to controller actions
+
+### Security Features
+
+| Feature          | Implementation                |
+| ---------------- | ----------------------------- |
+| Password Hashing | `password_hash()` with bcrypt |
+| SQL Injection    | PDO prepared statements       |
+| CSRF Protection  | Token-based form protection   |
+| Session Security | Secure session configuration  |
+| XSS Prevention   | Output escaping in views      |
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
 
 1. Fork the repository
 2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'feat: add amazing feature'`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
----
+### Guidelines
 
-## 🔒 Security
+- Follow the existing code style
+- Add PHPDoc comments for new functions
+- Update documentation as needed
+- Keep commits atomic and well-described
 
-For security concerns, please review our [Security Policy](.github/SECURITY.md).
+See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
 
-If you discover a security vulnerability, please report it privately rather than opening a public issue.
+## Disclaimer
 
----
+This project is created **purely for educational and portfolio demonstration purposes** to showcase PHP development skills and software architecture knowledge.
 
-## �� License
+**Important notices:**
+
+- It implements **industry-standard patterns** documented in publicly available resources including:
+  - Laravel's architectural patterns (implemented from scratch)
+  - OWASP security guidelines
+  - PHP-FIG PSR standards
+- This is **not intended for production use** without proper security audits and additional hardening
+- The codebase demonstrates MVC patterns, secure authentication, and database design principles
+
+## Security
+
+If you discover a security vulnerability, please report it privately rather than opening a public issue. See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
+
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-## 📝 Changelog
-
-See [CHANGELOG.md](CHANGELOG.md) for a detailed version history.
-
----
-
-## 👤 Author
-
-**Zascia Hugo**
-
-- GitHub: [@zugobite](https://github.com/zugobite)
-
----
-
-<div align="center">
-
-**⭐ Star this repo if you find it helpful!**
-
-Made with ❤️ by Zascia Hugo
-
-</div>
