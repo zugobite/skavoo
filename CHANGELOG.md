@@ -23,6 +23,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.1.0] - 2026-01-01
+
+### Added
+
+- Comprehensive developer documentation in `docs/` folder:
+  - `001-PROJECT_OVERVIEW.md` - Architecture and codebase overview
+  - `002-GETTING_STARTED.md` - Local setup and configuration guide
+  - `003-API_REFERENCE.md` - Complete route and endpoint documentation
+  - `004-AUTHENTICATION.md` - Auth flow, sessions, CSRF, and password reset
+  - `005-DATABASE_SCHEMA.md` - Database tables, relationships, and seeding
+  - `006-TESTING.md` - Manual test checklist and automated testing guidance
+  - `007-DEPLOYMENT.md` - Production deployment instructions
+  - `008-MONITORING.md` - Logging, health checks, and alerting
+  - `009-SCALING.md` - Performance optimization and horizontal scaling
+- Documentation link section in README.md
+
+### Changed
+
+- Updated README.md with Documentation section and project structure
+- Updated CHANGELOG.md with full commit history
+
+---
+
 ## [1.0.0] - 2026-01-01
 
 ### Added
@@ -147,7 +170,47 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-[Unreleased]: https://github.com/zugobite/skavoo/compare/v1.0.0...HEAD
+---
+
+## Commit History
+
+Full commit history for transparency and reference:
+
+| Commit | Description |
+| ------ | ----------- |
+| `89991dd` | chore: updated README.md file |
+| `c7a92fc` | chore: prepare v1.0.0 for open-source release |
+| `051b0f1` | fix: updated ui for the edit page |
+| `195df0a` | feature: added more details to profiles |
+| `217f8e5` | fix: improved ui |
+| `eff9235` | fix: updated ui |
+| `64a022c` | fix: improved the ui and implemented friend requests |
+| `d547b97` | chore: pixel pushing |
+| `17dfa85` | fix: updated messages functionality |
+| `01d1d58` | fix: edit profile functionality |
+| `ea6b471` | feature: added php migrate runner |
+| `d943d16` | fix: update errors in messages & edit profile |
+| `b3a2cb5` | Update index.php |
+| `bb78363` | feature: edit profile & messaging |
+| `ffd2dc9` | feature: implement password reset email |
+| `0d60382` | added forgot password scaffolding |
+| `ba1940b` | Update index.php |
+| `4ae5025` | feature: made minor ui edits |
+| `551c6ca` | chore: combined all css files into 1 file |
+| `7721849` | feature: changing password reset functionality to send email |
+| `2d7d494` | feature: updated general ui & implemented search functionality |
+| `71fc4db` | feature: updated general ui styling & implemented feed page |
+| `3dfa824` | feature: implemented login, registration, password reset, posts, profiles |
+| `b587c8d` | chore: updated changelog.md and readme.md files |
+| `a0a0267` | feat: secure DB credentials using .env and enhanced config |
+| `f7669e7` | chore: added db entity relationship diagram |
+| `e8995a9` | chore: added .sql file to create db tables |
+| `f84f5f0` | initial commit - project structure, routing system and login setup |
+
+---
+
+[Unreleased]: https://github.com/zugobite/skavoo/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/zugobite/skavoo/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/zugobite/skavoo/compare/v0.1.1...v1.0.0
 [0.1.1]: https://github.com/zugobite/skavoo/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/zugobite/skavoo/releases/tag/v0.1.0

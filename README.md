@@ -22,6 +22,7 @@ A modern, full-featured social media platform built from scratch with vanilla PH
 ## Table of Contents
 
 - [Quick Start](#quick-start)
+- [Documentation](#documentation)
 - [Routes & Endpoints](#routes--endpoints)
 - [Usage Examples](#usage-examples)
 - [Project Structure](#project-structure)
@@ -64,6 +65,22 @@ php -S localhost:8000
 ```
 
 The application will be available at `http://localhost:8000`.
+
+## Documentation
+
+Extensive developer documentation is available in the [`docs/`](docs/) folder:
+
+| Document                                                | Description                                                 |
+| ------------------------------------------------------- | ----------------------------------------------------------- |
+| [001-PROJECT_OVERVIEW.md](docs/001-PROJECT_OVERVIEW.md) | Architecture, request lifecycle, and codebase overview      |
+| [002-GETTING_STARTED.md](docs/002-GETTING_STARTED.md)   | Local setup, environment configuration, and troubleshooting |
+| [003-API_REFERENCE.md](docs/003-API_REFERENCE.md)       | Complete route documentation with request/response details  |
+| [004-AUTHENTICATION.md](docs/004-AUTHENTICATION.md)     | Auth flow, sessions, CSRF protection, and password reset    |
+| [005-DATABASE_SCHEMA.md](docs/005-DATABASE_SCHEMA.md)   | Table definitions, relationships, and seeding               |
+| [006-TESTING.md](docs/006-TESTING.md)                   | Manual test checklist and automated testing guidance        |
+| [007-DEPLOYMENT.md](docs/007-DEPLOYMENT.md)             | Production deployment and server configuration              |
+| [008-MONITORING.md](docs/008-MONITORING.md)             | Logging, health checks, and alerting                        |
+| [009-SCALING.md](docs/009-SCALING.md)                   | Database optimization, caching, and horizontal scaling      |
 
 ## Routes & Endpoints
 
@@ -218,6 +235,16 @@ skavoo/
 │       └── posts/
 ├── routes/
 │   └── web.php                         # Route definitions
+├── docs/                               # Developer documentation
+│   ├── 001-PROJECT_OVERVIEW.md
+│   ├── 002-GETTING_STARTED.md
+│   ├── 003-API_REFERENCE.md
+│   ├── 004-AUTHENTICATION.md
+│   ├── 005-DATABASE_SCHEMA.md
+│   ├── 006-TESTING.md
+│   ├── 007-DEPLOYMENT.md
+│   ├── 008-MONITORING.md
+│   └── 009-SCALING.md
 ├── .env.example                        # Environment template
 ├── CHANGELOG.md                        # Version history
 ├── CONTRIBUTING.md                     # Contribution guidelines
